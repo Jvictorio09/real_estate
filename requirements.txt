@@ -7,3 +7,4 @@ whitenoise==6.7.0          # serve static files in prod
 
 # --- Server (if deploying to Linux) ---
 gunicorn==21.2.0
+requests==2.32.3
