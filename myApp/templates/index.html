@@ -1,1 +1,52 @@
-Hello world!
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Esposito Courses — Realtor Mover-Smart Training</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet"/>
+  <style>
+    /* Quiet-luxury palette */
+    :root{
+      --ink:#0b1027; --muted:#6b7280; --brand:#18AFAB; --soft:#f7fafc; --card:#ffffff;
+    }
+    .brand { color: var(--brand); }
+    .bg-brand { background-color: var(--brand); }
+    .ink { color: var(--ink); }
+    .muted { color: var(--muted); }
+    .soft { background: var(--soft); }
+    .glass {
+      backdrop-filter: blur(8px);
+      background: rgba(255,255,255,.7);
+    }
+    .shadow-soft { box-shadow: 0 10px 30px rgba(15,23,42,.08); }
+    .hover-card:hover{ transform: translateY(-3px); box-shadow: 0 20px 40px rgba(2,6,23,.12); }
+    .trans { transition: all .2s ease; }
+    .orb::before{
+      content:""; position:absolute; inset:-20% -10% auto auto;
+      width: 420px; height: 420px; border-radius: 9999px;
+      background: radial-gradient(closest-side, rgba(24,175,171,.22), transparent 70%);
+      filter: blur(10px); z-index:0;
+    }
+  </style>
+</head>
+<body class="bg-white text-slate-900 antialiased">
+    {% include "partials/chatbot.html" %}
+
+  
+
+  
+
+  <script>
+    document.getElementById('y').textContent = new Date().getFullYear();
+    // Optional: close other details when one opens (clean UX)
+    const accord = document.querySelectorAll('#accordion details');
+    accord.forEach(d => {
+      d.addEventListener('toggle', () => {
+        if (d.open) accord.forEach(o => { if (o !== d) o.open = false; });
+      });
+    });
+  </script>
+</body>
+</html>

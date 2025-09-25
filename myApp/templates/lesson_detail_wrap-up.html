@@ -1,0 +1,260 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>{{ lesson.title }} — Lesson 12</title>
+  <script src="https://cdn.tailwindcss.com"></script>  {# remove if Tailwind is global #}
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet"/>
+  <style>
+    :root{ --ink:#0b1027; --muted:#64748b; --brand:#18AFAB; --soft:#f8fafc; }
+    .ink{color:var(--ink)} .muted{color:var(--muted)} .brand{color:var(--brand)}
+    .card{background:#fff; box-shadow:0 10px 30px rgba(2,6,23,.06)}
+    .progress{height:3px; background:linear-gradient(90deg,var(--brand),#22c55e)}
+    .pill{display:inline-flex;align-items:center;gap:.5rem;padding:.375rem .75rem;border-radius:.75rem;border:1px solid}
+    .commit{display:flex;gap:.75rem;align-items:flex-start}
+    .commit input{margin-top:.25rem}
+  </style>
+</head>
+<body class="bg-white text-slate-900 antialiased">
+    {% include "partials/chatbot.html" %}
+  <!-- progress -->
+  <div id="progressBar" class="fixed top-0 left-0 right-0 z-50 progress" style="width:0%"></div>
+
+  <!-- Breadcrumb -->
+  <nav class="border-b bg-white/80 backdrop-blur sticky top-0 z-40">
+    <div class="max-w-6xl mx-auto px-6 py-3 flex items-center justify-between">
+      <ol class="flex items-center gap-2 text-sm text-slate-500">
+        <li><a href="{% url 'lesson6' %}" class="hover:text-slate-900">Lesson 6 Overview</a></li>
+        <li class="text-slate-400">/</li>
+        <li class="text-slate-900 font-semibold">{{ lesson.title }}</li>
+      </ol>
+      <div class="hidden sm:flex items-center gap-2 text-sm">
+        <button class="px-3 py-1.5 rounded-lg border border-slate-200 hover:bg-slate-50">
+          <i class="fa-regular fa-bookmark mr-2"></i> Save
+        </button>
+        <button class="px-3 py-1.5 rounded-lg border border-slate-200 hover:bg-slate-50">
+          <i class="fa-solid fa-share-nodes mr-2"></i> Share
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <header>
+    <div class="max-w-6xl mx-auto px-6 pt-10 pb-6">
+      <p class="uppercase tracking-[.25em] text-xs brand font-semibold">Lesson 12</p>
+      <h1 class="text-3xl md:text-4xl font-extrabold ink leading-tight mt-1">
+        {{ lesson.subtitle|default:lesson.title }}
+      </h1>
+      <p class="muted mt-3 max-w-3xl">
+        Tie it all together with clear commitments you can carry into every client conversation and moving day.
+      </p>
+      <div class="mt-4 flex flex-wrap items-center gap-2">
+        <span class="pill bg-emerald-50 text-emerald-700 border-emerald-200 text-xs md:text-sm">
+          <i class="fa-regular fa-clock"></i> {{ lesson.meta.duration|default:"6–10 mins" }}
+        </span>
+        <span class="pill bg-sky-50 text-sky-700 border-sky-200 text-xs md:text-sm">
+          <i class="fa-solid fa-signal"></i> {{ lesson.meta.level|default:"All Agents" }}
+        </span>
+        <span class="pill bg-amber-50 text-amber-700 border-amber-200 text-xs md:text-sm">
+          <i class="fa-solid fa-flag-checkered"></i> Commitments
+        </span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Body -->
+  <main class="max-w-6xl mx-auto px-6 pb-16 grid lg:grid-cols-12 gap-8">
+    <!-- Content -->
+    <article class="lg:col-span-8">
+      <div class="card rounded-2xl p-6 md:p-8">
+        <div class="prose max-w-none">
+          <h2 id="core-message" class="text-2xl md:text-3xl font-bold ink">The Core Message</h2>
+          <p class="text-slate-700 mt-3">
+            Movers are professionals at one thing: moving. They are not plumbers, electricians, or gas technicians. When clients blur those lines, they put themselves, the movers, and the Realtor at risk. A single “favor” can lead to tens of thousands of dollars in damages, voided insurance coverage, and ruined trust.
+          </p>
+          <ul class="mt-4 space-y-2 text-slate-700">
+            <li>Protect clients from costly mistakes.</li>
+            <li>Protect yourself from liability.</li>
+            <li>Strengthen your reputation as a trusted advisor who thinks beyond the transaction.</li>
+          </ul>
+
+          <hr class="my-8 border-slate-200"/>
+
+          <h2 id="commitments" class="text-2xl md:text-3xl font-bold ink">Key Commitments for Realtors</h2>
+
+          <!-- Commitments checklist -->
+          <form id="commitForm" class="mt-4 space-y-4">
+            <label class="commit">
+              <input type="checkbox" name="c1"/>
+              <span><strong>Always educate clients on mover limits.</strong> Provide the Do’s and Don’ts and explain why licensed pros are required for certain tasks.</span>
+            </label>
+
+            <label class="commit">
+              <input type="checkbox" name="c2"/>
+              <span><strong>Anticipate and address risky items in advance.</strong> Call out built-ins, chandeliers, gas dryers, and plan specialists before move day.</span>
+            </label>
+
+            <label class="commit">
+              <input type="checkbox" name="c3"/>
+              <span><strong>Use professional scripts when clients make requests.</strong> Don’t improvise; use tested language that protects trust and coverage.</span>
+            </label>
+
+            <label class="commit">
+              <input type="checkbox" name="c4"/>
+              <span><strong>Carry and share job aids.</strong> Keep quick references to reinforce boundaries and avoid misunderstandings.</span>
+            </label>
+
+            <label class="commit">
+              <input type="checkbox" name="c5"/>
+              <span><strong>Model professionalism with movers.</strong> Respect their scope and protect them from being pushed into unsafe or illegal work.</span>
+            </label>
+
+            <div class="mt-6 grid sm:grid-cols-2 gap-3">
+              <button type="button" id="saveCommit" class="px-4 py-2 rounded-xl bg-emerald-600 text-white font-semibold hover:opacity-90">
+                <i class="fa-solid fa-floppy-disk mr-2"></i> Save My Commitments
+              </button>
+              <button type="button" id="clearCommit" class="px-4 py-2 rounded-xl border border-slate-300 font-semibold hover:bg-slate-50">
+                <i class="fa-regular fa-trash-can mr-2"></i> Clear Saved
+              </button>
+            </div>
+
+            <p id="saveMsg" class="text-sm text-slate-600 mt-2 hidden">Saved! Your selections will be remembered on this device.</p>
+          </form>
+
+          <hr class="my-8 border-slate-200"/>
+
+          <h2 id="closing-note" class="text-2xl md:text-3xl font-bold ink">The Closing Note</h2>
+          <p class="text-slate-700 mt-3">
+            The Realtor’s influence doesn’t end at closing. Guiding clients through the move responsibly adds value, prevents stress, and proves you care about outcomes—not just transactions.
+          </p>
+
+          <div class="mt-6 p-5 rounded-xl bg-emerald-50 border border-emerald-200">
+            <p class="text-slate-800"><strong>Key Takeaway:</strong> A trusted Realtor is not just a deal-maker but a protector of clients’ time, money, and peace of mind.</p>
+          </div>
+        </div>
+
+        <!-- CTA row -->
+        <div class="mt-8 flex flex-wrap gap-3">
+          <a href="{% url 'lesson6' %}"
+             class="px-5 py-3 rounded-xl border border-slate-300 font-semibold hover:bg-slate-50">
+            <i class="fa-solid fa-list mr-2"></i> Back to Overview
+          </a>
+          {% if next_topic %}
+          <a href="{% url 'lesson_detail' next_topic.slug %}"
+             class="px-5 py-3 rounded-xl bg-emerald-600 text-white font-semibold hover:opacity-90">
+            Next Lesson
+          </a>
+          {% endif %}
+          <a href="#" class="px-5 py-3 rounded-xl border border-slate-300 font-semibold hover:bg-slate-50">
+            Download Commitments (PDF)
+          </a>
+        </div>
+      </div>
+
+      <!-- Prev/Next -->
+      <div class="mt-6 flex items-center justify-between text-sm text-slate-600">
+        {% if prev_topic %}
+          <a href="{% url 'lesson_detail' prev_topic.slug %}" class="hover:text-slate-900"><i class="fa-solid fa-arrow-left-long mr-2"></i> {{ prev_topic.title }}</a>
+        {% else %}
+          <span></span>
+        {% endif %}
+        {% if next_topic %}
+          <a href="{% url 'lesson_detail' next_topic.slug %}" class="hover:text-slate-900">{{ next_topic.title }} <i class="fa-solid fa-arrow-right-long ml-2"></i></a>
+        {% endif %}
+      </div>
+    </article>
+
+    <!-- Sidebar -->
+    <aside class="lg:col-span-4 lg:sticky lg:top-20 h-max">
+      <!-- TOC -->
+      <div class="card rounded-2xl p-5 mb-5">
+        <div class="flex items-center justify-between mb-3">
+          <h4 class="font-semibold">On this page</h4>
+          <span class="text-xs text-slate-500">Lesson 12</span>
+        </div>
+        <nav id="toc" class="space-y-2 text-sm"></nav>
+      </div>
+
+      <!-- All topics -->
+      <div class="card rounded-2xl p-5">
+        <h4 class="font-semibold mb-3">All topics</h4>
+        <ul class="space-y-1 text-sm">
+          {% for t in all_topics %}
+          <li>
+            <a href="{% url 'lesson_detail' t.slug %}"
+               class="block px-3 py-2 rounded-lg border border-transparent hover:border-slate-200 hover:bg-slate-50 {% if t.slug == slug %}bg-slate-100 border-slate-200{% endif %}">
+              {{ forloop.counter }}. {{ t.title }}
+            </a>
+          </li>
+          {% endfor %}
+        </ul>
+        <a href="{% url 'lesson6' %}" class="mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-slate-200 hover:bg-slate-50 text-sm">
+          <i class="fa-solid fa-list"></i> Back to Overview
+        </a>
+      </div>
+    </aside>
+  </main>
+
+  <footer class="py-10 border-t">
+    <div class="max-w-6xl mx-auto px-6 text-xs text-slate-500">
+      © <span id="year"></span> Esposito Courses • Lesson 12
+    </div>
+  </footer>
+
+  <script>
+    // year + progress
+    document.getElementById('year').textContent = new Date().getFullYear();
+    const pb = document.getElementById('progressBar');
+    window.addEventListener('scroll', () => {
+      const h = document.documentElement;
+      const scrolled = (h.scrollTop) / (h.scrollHeight - h.clientHeight);
+      pb.style.width = (scrolled * 100) + '%';
+    });
+
+    // Build TOC from h2
+    const content = document.querySelector('article');
+    const toc = document.getElementById('toc');
+    const heads = content.querySelectorAll('h2');
+    const ul = document.createElement('ul'); ul.className = "space-y-1";
+    heads.forEach(h => {
+      if(!h.id){ h.id = h.textContent.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,''); }
+      const li = document.createElement('li');
+      li.innerHTML = `<a href="#${h.id}" class="block px-3 py-2 rounded-lg border border-transparent hover:border-slate-200 hover:bg-slate-50">${h.textContent}</a>`;
+      ul.appendChild(li);
+    });
+    toc.appendChild(ul);
+
+    // Commitments — save/restore via localStorage (demo-friendly)
+    const KEY = 'esposito_commitments_v1';
+    const form = document.getElementById('commitForm');
+    const msg = document.getElementById('saveMsg');
+    const saveBtn = document.getElementById('saveCommit');
+    const clearBtn = document.getElementById('clearCommit');
+
+    // restore
+    try {
+      const saved = JSON.parse(localStorage.getItem(KEY) || '{}');
+      Array.from(form.querySelectorAll('input[type="checkbox"]')).forEach(cb => {
+        if (saved[cb.name]) cb.checked = true;
+      });
+    } catch(e){ /* noop */ }
+
+    saveBtn.addEventListener('click', () => {
+      const data = {};
+      Array.from(form.querySelectorAll('input[type="checkbox"]')).forEach(cb => data[cb.name] = cb.checked);
+      localStorage.setItem(KEY, JSON.stringify(data));
+      msg.classList.remove('hidden');
+      saveBtn.innerHTML = '<i class="fa-solid fa-check mr-2"></i> Saved';
+      setTimeout(()=>{ msg.classList.add('hidden'); saveBtn.innerHTML='<i class="fa-solid fa-floppy-disk mr-2"></i> Save My Commitments'; }, 1200);
+    });
+
+    clearBtn.addEventListener('click', () => {
+      localStorage.removeItem(KEY);
+      Array.from(form.querySelectorAll('input[type="checkbox"]')).forEach(cb => cb.checked = false);
+    });
+  </script>
+</body>
+</html>

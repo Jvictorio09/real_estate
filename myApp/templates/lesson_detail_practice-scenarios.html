@@ -1,0 +1,420 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>{{ lesson.title }} — Lesson 9</title>
+  <script src="https://cdn.tailwindcss.com"></script>  {# remove if Tailwind is global #}
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet"/>
+  <style>
+    :root{ --ink:#0b1027; --muted:#64748b; --brand:#18AFAB; --soft:#f8fafc; }
+    .ink{color:var(--ink)} .muted{color:var(--muted)} .brand{color:var(--brand)}
+    .card{background:#fff; box-shadow:0 10px 30px rgba(2,6,23,.06)}
+    .progress{height:3px; background:linear-gradient(90deg,var(--brand),#22c55e)}
+    .pill{display:inline-flex;align-items:center;gap:.5rem;padding:.375rem .75rem;border-radius:.75rem;border:1px solid}
+    .is-correct{background:#ecfdf5;border-color:#86efac}
+    .is-wrong{background:#fef2f2;border-color:#fecaca}
+    .choice{border:1px solid #e5e7eb;border-radius:.65rem;padding:.5rem .75rem}
+    .choice[aria-pressed="true"]{border-color:#94a3b8;background:#f8fafc}
+  </style>
+</head>
+<body class="bg-white text-slate-900 antialiased">
+    {% include "partials/chatbot.html" %}
+  <!-- progress -->
+  <div id="progressBar" class="fixed top-0 left-0 right-0 z-50 progress" style="width:0%"></div>
+
+  <!-- Breadcrumb -->
+  <nav class="border-b bg-white/80 backdrop-blur sticky top-0 z-40">
+    <div class="max-w-6xl mx-auto px-6 py-3 flex items-center justify-between">
+      <ol class="flex items-center gap-2 text-sm text-slate-500">
+        <li><a href="{% url 'lesson6' %}" class="hover:text-slate-900">Lesson 6 Overview</a></li>
+        <li class="text-slate-400">/</li>
+        <li class="text-slate-900 font-semibold">{{ lesson.title }}</li>
+      </ol>
+      <div class="hidden sm:flex items-center gap-2 text-sm">
+        <button class="px-3 py-1.5 rounded-lg border border-slate-200 hover:bg-slate-50">
+          <i class="fa-regular fa-bookmark mr-2"></i> Save
+        </button>
+        <button class="px-3 py-1.5 rounded-lg border border-slate-200 hover:bg-slate-50">
+          <i class="fa-solid fa-share-nodes mr-2"></i> Share
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <header>
+    <div class="max-w-6xl mx-auto px-6 pt-10 pb-6">
+      <p class="uppercase tracking-[.25em] text-xs brand font-semibold">Lesson 9</p>
+      <h1 class="text-3xl md:text-4xl font-extrabold ink leading-tight mt-1">
+        {{ lesson.subtitle|default:lesson.title }}
+      </h1>
+      <p class="muted mt-3 max-w-3xl">
+        Knowledge is nice. Saying the right words under pressure? That’s the superpower. Practice the responses here.
+      </p>
+      <div class="mt-4 flex flex-wrap items-center gap-2">
+        <span class="pill bg-emerald-50 text-emerald-700 border-emerald-200 text-xs md:text-sm">
+          <i class="fa-regular fa-clock"></i> {{ lesson.meta.duration|default:"12–18 mins" }}
+        </span>
+        <span class="pill bg-sky-50 text-sky-700 border-sky-200 text-xs md:text-sm">
+          <i class="fa-solid fa-signal"></i> {{ lesson.meta.level|default:"All Agents" }}
+        </span>
+        <span class="pill bg-amber-50 text-amber-700 border-amber-200 text-xs md:text-sm">
+          <i class="fa-solid fa-person-chalkboard"></i> Scenarios & Activities
+        </span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Body -->
+  <main class="max-w-6xl mx-auto px-6 pb-16 grid lg:grid-cols-12 gap-8">
+    <!-- Content -->
+    <article class="lg:col-span-8">
+      <div class="card rounded-2xl p-6 md:p-8">
+        <div class="prose max-w-none">
+          <p class="text-slate-700">
+            Realtors need more than knowledge—they need the ability to apply it in the moment when a stressed client makes an unexpected request. These practice scenarios are designed to simulate those conversations and decision points.
+          </p>
+
+          <hr class="my-8 border-slate-200"/>
+
+          <!-- Scenario 1 -->
+          <section id="scenario-fridge" class="space-y-2">
+            <h2 class="text-2xl md:text-3xl font-bold ink">Scenario 1: The Fridge Water Line</h2>
+            <p class="mt-1"><span class="font-semibold">Client Request:</span> “Since the movers are already here, can they disconnect the fridge water line? It’s just a quick thing.”</p>
+            <p class="mt-1"><span class="font-semibold">Correct Realtor Response:</span> “Movers aren’t licensed plumbers, so if they disconnect it and there’s a leak, it won’t be covered by insurance. Let’s have a plumber handle that instead.”</p>
+            <p class="mt-1 text-slate-700"><span class="font-semibold">Learning Point:</span> Even the simplest appliance connections involve liability.</p>
+          </section>
+
+          <hr class="my-8 border-slate-200"/>
+
+          <!-- Scenario 2 -->
+          <section id="scenario-chandelier" class="space-y-2">
+            <h2 class="text-2xl md:text-3xl font-bold ink">Scenario 2: The Chandelier</h2>
+            <p class="mt-1"><span class="font-semibold">Client Request:</span> “Can the movers take down the chandelier and put it up in the new house?”</p>
+            <p class="mt-1"><span class="font-semibold">Correct Realtor Response:</span> “That involves electrical wiring, so movers can’t legally handle it. Let’s arrange an electrician so it’s done safely.”</p>
+            <p class="mt-1 text-slate-700"><span class="font-semibold">Learning Point:</span> Electrical tasks must always be performed by licensed professionals.</p>
+          </section>
+
+          <hr class="my-8 border-slate-200"/>
+
+          <!-- Scenario 3 -->
+          <section id="scenario-plants" class="space-y-2">
+            <h2 class="text-2xl md:text-3xl font-bold ink">Scenario 3: The Plant Move</h2>
+            <p class="mt-1"><span class="font-semibold">Client Request:</span> “I don’t want to leave these plants behind—can the movers take them across the state line?”</p>
+            <p class="mt-1"><span class="font-semibold">Correct Realtor Response:</span> “Unfortunately, movers aren’t allowed to transport plants across states because of agricultural restrictions. I can suggest alternatives for transporting them.”</p>
+            <p class="mt-1 text-slate-700"><span class="font-semibold">Learning Point:</span> Not all items are legal to transport, even if clients believe it’s harmless.</p>
+          </section>
+
+          <hr class="my-8 border-slate-200"/>
+
+          <!-- Scenario 4 -->
+          <section id="scenario-tv" class="space-y-2">
+            <h2 class="text-2xl md:text-3xl font-bold ink">Scenario 4: The Flat-Screen TV</h2>
+            <p class="mt-1"><span class="font-semibold">Client Situation:</span> After the move, a client says: “My TV isn’t working. The movers must have broken it.”</p>
+            <p class="mt-1"><span class="font-semibold">Correct Realtor Guidance:</span> “Did you test the TV before the move? Movers are responsible for items packed and transported, but electronics need to be checked before moving day to avoid disputes.”</p>
+            <p class="mt-1 text-slate-700"><span class="font-semibold">Learning Point:</span> Testing electronics beforehand prevents false blame and protects both movers and clients.</p>
+          </section>
+
+          <hr class="my-8 border-slate-200"/>
+
+          <!-- Interactive Checklist -->
+          <section id="checklist">
+            <h2 class="text-2xl md:text-3xl font-bold ink">Checklist Activity</h2>
+            <p class="text-slate-700 mt-2">From this list, mark whether each is a “Mover Task” or a “Licensed Pro Task”. One item is “Client Only”.</p>
+
+            <div class="mt-4 grid gap-3">
+              <!-- Row template pattern -->
+              <div class="p-4 rounded-xl border border-slate-200" data-question="bed">
+                <div class="flex items-start justify-between gap-4">
+                  <p class="font-medium">Disassemble a bed frame</p>
+                  <div class="flex gap-2 shrink-0">
+                    <button class="choice text-xs" data-choice="Mover">Mover</button>
+                    <button class="choice text-xs" data-choice="Licensed Pro">Licensed Pro</button>
+                    <button class="choice text-xs" data-choice="Client Only">Client Only</button>
+                  </div>
+                </div>
+                <p class="mt-2 text-sm hidden"></p>
+              </div>
+
+              <div class="p-4 rounded-xl border border-slate-200" data-question="gasdryer">
+                <div class="flex items-start justify-between gap-4">
+                  <p class="font-medium">Disconnect a gas dryer</p>
+                  <div class="flex gap-2 shrink-0">
+                    <button class="choice text-xs" data-choice="Mover">Mover</button>
+                    <button class="choice text-xs" data-choice="Licensed Pro">Licensed Pro</button>
+                    <button class="choice text-xs" data-choice="Client Only">Client Only</button>
+                  </div>
+                </div>
+                <p class="mt-2 text-sm hidden"></p>
+              </div>
+
+              <div class="p-4 rounded-xl border border-slate-200" data-question="glassware">
+                <div class="flex items-start justify-between gap-4">
+                  <p class="font-medium">Pack kitchen glassware</p>
+                  <div class="flex gap-2 shrink-0">
+                    <button class="choice text-xs" data-choice="Mover">Mover</button>
+                    <button class="choice text-xs" data-choice="Licensed Pro">Licensed Pro</button>
+                    <button class="choice text-xs" data-choice="Client Only">Client Only</button>
+                  </div>
+                </div>
+                <p class="mt-2 text-sm hidden"></p>
+              </div>
+
+              <div class="p-4 rounded-xl border border-slate-200" data-question="chandelier">
+                <div class="flex items-start justify-between gap-4">
+                  <p class="font-medium">Remove a chandelier</p>
+                  <div class="flex gap-2 shrink-0">
+                    <button class="choice text-xs" data-choice="Mover">Mover</button>
+                    <button class="choice text-xs" data-choice="Licensed Pro">Licensed Pro</button>
+                    <button class="choice text-xs" data-choice="Client Only">Client Only</button>
+                  </div>
+                </div>
+                <p class="mt-2 text-sm hidden"></p>
+              </div>
+
+              <div class="p-4 rounded-xl border border-slate-200" data-question="valuables">
+                <div class="flex items-start justify-between gap-4">
+                  <p class="font-medium">Transport jewelry and cash</p>
+                  <div class="flex gap-2 shrink-0">
+                    <button class="choice text-xs" data-choice="Mover">Mover</button>
+                    <button class="choice text-xs" data-choice="Licensed Pro">Licensed Pro</button>
+                    <button class="choice text-xs" data-choice="Client Only">Client Only</button>
+                  </div>
+                </div>
+                <p class="mt-2 text-sm hidden"></p>
+              </div>
+
+              <div class="p-4 rounded-xl border border-slate-200" data-question="sofa">
+                <div class="flex items-start justify-between gap-4">
+                  <p class="font-medium">Wrap and move a sofa</p>
+                  <div class="flex gap-2 shrink-0">
+                    <button class="choice text-xs" data-choice="Mover">Mover</button>
+                    <button class="choice text-xs" data-choice="Licensed Pro">Licensed Pro</button>
+                    <button class="choice text-xs" data-choice="Client Only">Client Only</button>
+                  </div>
+                </div>
+                <p class="mt-2 text-sm hidden"></p>
+              </div>
+
+              <div class="p-4 rounded-xl border border-slate-200" data-question="washer">
+                <div class="flex items-start justify-between gap-4">
+                  <p class="font-medium">Connect a washing machine</p>
+                  <div class="flex gap-2 shrink-0">
+                    <button class="choice text-xs" data-choice="Mover">Mover</button>
+                    <button class="choice text-xs" data-choice="Licensed Pro">Licensed Pro</button>
+                    <button class="choice text-xs" data-choice="Client Only">Client Only</button>
+                  </div>
+                </div>
+                <p class="mt-2 text-sm hidden"></p>
+              </div>
+
+              <div class="p-4 rounded-xl border border-slate-200" data-question="storage">
+                <div class="flex items-start justify-between gap-4">
+                  <p class="font-medium">Move boxes into a storage unit</p>
+                  <div class="flex gap-2 shrink-0">
+                    <button class="choice text-xs" data-choice="Mover">Mover</button>
+                    <button class="choice text-xs" data-choice="Licensed Pro">Licensed Pro</button>
+                    <button class="choice text-xs" data-choice="Client Only">Client Only</button>
+                  </div>
+                </div>
+                <p class="mt-2 text-sm hidden"></p>
+              </div>
+            </div>
+
+            <!-- Score + reveal -->
+            <div class="mt-4 flex items-center gap-3">
+              <div id="score" class="text-sm text-slate-600">Score: 0/8</div>
+              <button id="reveal" class="text-sm px-3 py-1.5 rounded-lg border border-slate-300 hover:bg-slate-50">
+                Reveal Answer Key
+              </button>
+            </div>
+
+            <!-- Accessible static key -->
+            <details class="mt-3">
+              <summary class="cursor-pointer text-sm text-slate-600">Static Answer Key (for print)</summary>
+              <ul class="mt-2 text-sm text-slate-700 list-disc pl-6">
+                <li>Bed frame – <strong>Mover</strong></li>
+                <li>Gas dryer – <strong>Licensed Pro</strong></li>
+                <li>Kitchen glassware – <strong>Mover</strong></li>
+                <li>Chandelier – <strong>Licensed Pro</strong></li>
+                <li>Jewelry and cash – <strong>Client only</strong> (not mover)</li>
+                <li>Sofa – <strong>Mover</strong></li>
+                <li>Washing machine – <strong>Licensed Pro</strong></li>
+                <li>Storage unit – <strong>Mover</strong></li>
+              </ul>
+            </details>
+          </section>
+
+          <hr class="my-8 border-slate-200"/>
+
+          <!-- Role Play -->
+          <section id="role-play">
+            <h2 class="text-2xl md:text-3xl font-bold ink">Role-Play Exercise</h2>
+            <p class="text-slate-700 mt-2">
+              Pair Realtors together. One plays the client, one plays the Realtor. The “client” makes escalating requests (disconnecting appliances, moving plants, handling valuables).
+              The Realtor must respond using:
+            </p>
+            <ul class="list-disc pl-6 mt-2 space-y-1 text-slate-700">
+              <li>The Do’s &amp; Don’ts Guide</li>
+              <li>At least one real-world story to reinforce their boundary</li>
+              <li>A professional script to protect both sides</li>
+            </ul>
+            <div class="mt-3 p-4 rounded-xl bg-slate-50 border border-slate-200">
+              <p class="text-slate-800"><strong>Debrief:</strong> After the exercise, share which parts felt natural and which responses need more practice.</p>
+            </div>
+
+            <div class="mt-6 p-5 rounded-xl bg-emerald-50 border border-emerald-200">
+              <p class="text-slate-800"><strong>Key Takeaway:</strong> Practice scenarios prepare Realtors to respond calmly and confidently in high-stress moments—turning boundaries into professional guidance instead of conflict.</p>
+            </div>
+          </section>
+        </div>
+
+        <!-- CTA row -->
+        <div class="mt-8 flex flex-wrap gap-3">
+          <a href="{% if next_topic %}{% url 'lesson_detail' next_topic.slug %}{% else %}{% url 'lesson6' %}{% endif %}"
+             class="px-5 py-3 rounded-xl bg-emerald-600 text-white font-semibold hover:opacity-90">
+            Next Lesson
+          </a>
+          <a href="#" class="px-5 py-3 rounded-xl border border-slate-300 font-semibold hover:bg-slate-50">
+            Download Scenario Pack (PDF)
+          </a>
+        </div>
+      </div>
+
+      <!-- Prev/Next -->
+      <div class="mt-6 flex items-center justify-between text-sm text-slate-600">
+        {% if prev_topic %}
+          <a href="{% url 'lesson_detail' prev_topic.slug %}" class="hover:text-slate-900"><i class="fa-solid fa-arrow-left-long mr-2"></i> {{ prev_topic.title }}</a>
+        {% else %}
+          <a href="{% url 'lesson6' %}" class="hover:text-slate-900"><i class="fa-solid fa-arrow-left-long mr-2"></i> Back to Overview</a>
+        {% endif %}
+        {% if next_topic %}
+          <a href="{% url 'lesson_detail' next_topic.slug %}" class="hover:text-slate-900">{{ next_topic.title }} <i class="fa-solid fa-arrow-right-long ml-2"></i></a>
+        {% endif %}
+      </div>
+    </article>
+
+    <!-- Sidebar -->
+    <aside class="lg:col-span-4 lg:sticky lg:top-20 h-max">
+      <!-- TOC -->
+      <div class="card rounded-2xl p-5 mb-5">
+        <div class="flex items-center justify-between mb-3">
+          <h4 class="font-semibold">On this page</h4>
+          <span class="text-xs text-slate-500">Lesson 9</span>
+        </div>
+        <nav id="toc" class="space-y-2 text-sm"></nav>
+      </div>
+
+      <!-- All topics -->
+      <div class="card rounded-2xl p-5">
+        <h4 class="font-semibold mb-3">All topics</h4>
+        <ul class="space-y-1 text-sm">
+          {% for t in all_topics %}
+          <li>
+            <a href="{% url 'lesson_detail' t.slug %}"
+               class="block px-3 py-2 rounded-lg border border-transparent hover:border-slate-200 hover:bg-slate-50 {% if t.slug == slug %}bg-slate-100 border-slate-200{% endif %}">
+              {{ forloop.counter }}. {{ t.title }}
+            </a>
+          </li>
+          {% endfor %}
+        </ul>
+        <a href="{% url 'lesson6' %}" class="mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-slate-200 hover:bg-slate-50 text-sm">
+          <i class="fa-solid fa-list"></i> Back to Overview
+        </a>
+      </div>
+    </aside>
+  </main>
+
+  <footer class="py-10 border-t">
+    <div class="max-w-6xl mx-auto px-6 text-xs text-slate-500">
+      © <span id="year"></span> Esposito Courses • Lesson 9
+    </div>
+  </footer>
+
+  <script>
+    // year + progress
+    document.getElementById('year').textContent = new Date().getFullYear();
+    const pb = document.getElementById('progressBar');
+    window.addEventListener('scroll', () => {
+      const h = document.documentElement;
+      const scrolled = (h.scrollTop) / (h.scrollHeight - h.clientHeight);
+      pb.style.width = (scrolled * 100) + '%';
+    });
+
+    // Build TOC from h2/h3
+    const content = document.querySelector('article');
+    const toc = document.getElementById('toc');
+    const heads = content.querySelectorAll('h2, h3');
+    const ul = document.createElement('ul'); ul.className = "space-y-1";
+    heads.forEach(h => {
+      if(!h.id){ h.id = h.textContent.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,''); }
+      const li = document.createElement('li');
+      li.innerHTML = `<a href="#${h.id}" class="block px-3 py-2 rounded-lg border border-transparent hover:border-slate-200 hover:bg-slate-50">${h.textContent}</a>`;
+      ul.appendChild(li);
+    });
+    toc.appendChild(ul);
+
+    // Interactive checklist
+    const answers = {
+      bed: "Mover",
+      gasdryer: "Licensed Pro",
+      glassware: "Mover",
+      chandelier: "Licensed Pro",
+      valuables: "Client Only",
+      sofa: "Mover",
+      washer: "Licensed Pro",
+      storage: "Mover",
+    };
+
+    let score = 0;
+    const total = Object.keys(answers).length;
+    const scoreEl = document.getElementById('score');
+
+    function updateScore(delta){
+      score = Math.max(0, Math.min(total, score + delta));
+      scoreEl.textContent = `Score: ${score}/${total}`;
+    }
+
+    document.querySelectorAll('#checklist [data-question]').forEach(row => {
+      const q = row.getAttribute('data-question');
+      const msg = row.querySelector('p.mt-2');
+      row.querySelectorAll('.choice').forEach(btn => {
+        btn.addEventListener('click', () => {
+          // reset pressed state
+          row.querySelectorAll('.choice').forEach(b => b.setAttribute('aria-pressed','false'));
+          btn.setAttribute('aria-pressed','true');
+
+          const choice = btn.getAttribute('data-choice');
+          const correct = answers[q];
+
+          msg.classList.remove('hidden','is-correct','is-wrong');
+          if(choice === correct){
+            msg.textContent = `Correct — ${correct}.`;
+            msg.classList.add('is-correct');
+            // only add to score first time per row
+            if(!row.dataset.answered){ updateScore(1); row.dataset.answered = "1"; }
+          } else {
+            msg.textContent = `Not quite. Correct answer: ${correct}.`;
+            msg.classList.add('is-wrong');
+            // lock score if previously correct
+          }
+        });
+      });
+    });
+
+    document.getElementById('reveal').addEventListener('click', () => {
+      document.querySelectorAll('#checklist [data-question]').forEach(row => {
+        const q = row.getAttribute('data-question');
+        const msg = row.querySelector('p.mt-2');
+        msg.classList.remove('hidden','is-wrong');
+        msg.classList.add('is-correct');
+        msg.textContent = `Answer: ${answers[q]}.`;
+        // set answered if not yet
+        if(!row.dataset.answered){ row.dataset.answered = "1"; updateScore(1); }
+      });
+    });
+  </script>
+</body>
+</html>

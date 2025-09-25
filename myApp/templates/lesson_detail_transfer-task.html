@@ -1,0 +1,301 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>{{ lesson.title }} — Lesson 13</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet"/>
+  <style>
+    :root{ --ink:#0b1027; --muted:#64748b; --brand:#18AFAB; --soft:#f8fafc; }
+    .ink{color:var(--ink)} .muted{color:var(--muted)} .brand{color:var(--brand)}
+    .card{background:#fff; box-shadow:0 10px 30px rgba(2,6,23,.06)}
+    .progress{height:3px; background:linear-gradient(90deg,var(--brand),#22c55e)}
+    .pill{display:inline-flex;align-items:center;gap:.5rem;padding:.375rem .75rem;border-radius:.75rem;border:1px solid}
+    textarea{resize:vertical}
+  </style>
+</head>
+<body class="bg-white text-slate-900 antialiased">
+    {% include "partials/chatbot.html" %}
+  <div id="progressBar" class="fixed top-0 left-0 right-0 z-50 progress" style="width:0%"></div>
+
+  <nav class="border-b bg-white/80 backdrop-blur sticky top-0 z-40">
+    <div class="max-w-6xl mx-auto px-6 py-3 flex items-center justify-between">
+      <ol class="flex items-center gap-2 text-sm text-slate-500">
+        <li><a href="{% url 'lesson6' %}" class="hover:text-slate-900">Lesson 6 Overview</a></li>
+        <li class="text-slate-400">/</li>
+        <li class="text-slate-900 font-semibold">{{ lesson.title }}</li>
+      </ol>
+      <div class="hidden sm:flex items-center gap-2 text-sm">
+        <button class="px-3 py-1.5 rounded-lg border border-slate-200 hover:bg-slate-50">
+          <i class="fa-regular fa-bookmark mr-2"></i> Save
+        </button>
+        <button class="px-3 py-1.5 rounded-lg border border-slate-200 hover:bg-slate-50">
+          <i class="fa-solid fa-share-nodes mr-2"></i> Share
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <header>
+    <div class="max-w-6xl mx-auto px-6 pt-10 pb-6">
+      <p class="uppercase tracking-[.25em] text-xs brand font-semibold">Lesson 13</p>
+      <h1 class="text-3xl md:text-4xl font-extrabold ink leading-tight mt-1">
+        {{ lesson.subtitle|default:lesson.title }}
+      </h1>
+      <p class="muted mt-3 max-w-3xl">
+        Learning sticks when you use it. Apply the Do’s &amp; Don’ts in the first 24–72 hours to cement the habit.
+      </p>
+      <div class="mt-4 flex flex-wrap items-center gap-2">
+        <span class="pill bg-emerald-50 text-emerald-700 border-emerald-200 text-xs md:text-sm">
+          <i class="fa-regular fa-clock"></i> {{ lesson.meta.duration|default:"6–10 mins" }}
+        </span>
+        <span class="pill bg-sky-50 text-sky-700 border-sky-200 text-xs md:text-sm">
+          <i class="fa-solid fa-signal"></i> {{ lesson.meta.level|default:"All Agents" }}
+        </span>
+        <span class="pill bg-amber-50 text-amber-700 border-amber-200 text-xs md:text-sm">
+          <i class="fa-solid fa-bolt"></i> Transfer Task
+        </span>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-6 pb-16 grid lg:grid-cols-12 gap-8">
+    <article class="lg:col-span-8">
+      <div class="card rounded-2xl p-6 md:p-8">
+        <div class="prose max-w-none">
+          <h2 class="text-2xl md:text-3xl font-bold ink">Purpose</h2>
+          <p class="text-slate-700">
+            Move knowledge from theory into practice within three days of completing this course.
+          </p>
+
+          <hr class="my-8 border-slate-200"/>
+
+          <h2 class="text-2xl md:text-3xl font-bold ink">Task Requirements</h2>
+
+          <!-- 1 -->
+          <section class="mt-4">
+            <h3 class="font-semibold text-lg ink">1) Explain the Rules to Someone Else</h3>
+            <p class="text-slate-700">Explain 2–3 Do’s and Don’ts to a friend/colleague. Include the <em>reason</em> behind each.</p>
+            <ul class="list-disc pl-6 text-slate-700">
+              <li>Don’t let movers disconnect a fridge water line — leaks can cause $50k damage and won’t be covered by insurance.</li>
+              <li>Do test appliances before the move — prevents false blame if something was already broken.</li>
+            </ul>
+          </section>
+
+          <!-- 2 -->
+          <section class="mt-6">
+            <h3 class="font-semibold text-lg ink">2) Share a Reflection</h3>
+            <ul class="list-disc pl-6 text-slate-700">
+              <li>Was it easy to explain?</li>
+              <li>Did they “get it”?</li>
+              <li>What part had the biggest impact?</li>
+            </ul>
+          </section>
+
+          <!-- 3 -->
+          <section class="mt-6">
+            <h3 class="font-semibold text-lg ink">3) Identify a Real Client Risk</h3>
+            <p class="text-slate-700">Think of a recent/upcoming move; note at least one “mover don’t” (e.g., chandelier, plants, valuables) and plan to prevent it using scripts and job aids.</p>
+          </section>
+
+          <!-- 4 -->
+          <section class="mt-6">
+            <h3 class="font-semibold text-lg ink">4) Engage with Peers</h3>
+            <p class="text-slate-700">Respond to at least one other Realtor’s reflection to reinforce boundary-setting across the team.</p>
+          </section>
+
+          <hr class="my-8 border-slate-200"/>
+
+          <h2 class="text-2xl md:text-3xl font-bold ink">Submit Your Transfer Task</h2>
+          <p class="text-slate-700">Use the form below (saved to this device for demo). Copy the preview to post in your group.</p>
+
+          <!-- Submission form -->
+          <form id="ttForm" class="mt-4 grid gap-4">
+            <div>
+              <label class="block text-sm font-medium text-slate-700">Mover Don’t You’ve Seen (or expect)</label>
+              <input id="dont" type="text" class="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2" placeholder="e.g., Client asked movers to reconnect a gas dryer"/>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-slate-700">Your Preventive Plan</label>
+              <textarea id="plan" rows="3" class="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2" placeholder="e.g., Use the licensed-pro script and line up a gas tech before move day"></textarea>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-slate-700">Reflection (what landed when you explained it?)</label>
+              <textarea id="reflection" rows="3" class="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2" placeholder="e.g., The $50k fridge story made the risk feel real"></textarea>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-slate-700">Peer You Engaged With (optional)</label>
+              <input id="peer" type="text" class="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2" placeholder="e.g., Replied to Kelly’s chandelier post"/>
+            </div>
+
+            <div class="flex flex-wrap gap-3">
+              <button type="button" id="save" class="px-4 py-2 rounded-xl bg-emerald-600 text-white font-semibold hover:opacity-90">
+                <i class="fa-solid fa-floppy-disk mr-2"></i> Save Draft
+              </button>
+              <button type="button" id="clear" class="px-4 py-2 rounded-xl border border-slate-300 font-semibold hover:bg-slate-50">
+                <i class="fa-regular fa-trash-can mr-2"></i> Clear
+              </button>
+              <button type="button" id="copy" class="px-4 py-2 rounded-xl border border-slate-300 font-semibold hover:bg-slate-50">
+                <i class="fa-regular fa-copy mr-2"></i> Copy Preview
+              </button>
+            </div>
+
+            <div id="savedMsg" class="hidden text-sm text-emerald-700">Saved!</div>
+          </form>
+
+          <!-- Preview -->
+          <div class="mt-6 p-4 rounded-2xl bg-slate-50 border border-slate-200">
+            <h4 class="font-semibold">Preview (share this):</h4>
+            <pre id="preview" class="whitespace-pre-wrap text-sm text-slate-800 mt-2">—</pre>
+          </div>
+
+          <hr class="my-8 border-slate-200"/>
+
+          <h2 class="text-2xl md:text-3xl font-bold ink">Example Transfer Task Submission</h2>
+          <ul class="text-slate-700 mt-3 space-y-1">
+            <li><strong>Mover Don’t I’ve Seen:</strong> Client asked movers to reconnect a gas dryer.</li>
+            <li><strong>My Preventive Plan:</strong> Use the “licensed pro” script: “Movers move; licensed pros handle utilities.” Book a gas tech before moving day.</li>
+            <li><strong>Peer Engagement:</strong> Commented on a fridge-line post and shared how I’d explain the risk.</li>
+          </ul>
+
+          <div class="mt-6 p-5 rounded-xl bg-emerald-50 border border-emerald-200">
+            <p class="text-slate-800"><strong>Key Takeaway:</strong> Apply within three days to cement long-term professional practice.</p>
+          </div>
+        </div>
+
+        <!-- CTA -->
+        <div class="mt-8 flex flex-wrap gap-3">
+          <a href="{% if next_topic %}{% url 'lesson_detail' next_topic.slug %}{% else %}{% url 'lesson6' %}{% endif %}"
+             class="px-5 py-3 rounded-xl bg-emerald-600 text-white font-semibold hover:opacity-90">
+            Next Lesson
+          </a>
+          <a href="{% url 'lesson6' %}" class="px-5 py-3 rounded-xl border border-slate-300 font-semibold hover:bg-slate-50">
+            Back to Overview
+          </a>
+        </div>
+      </div>
+
+      <!-- Prev/Next -->
+      <div class="mt-6 flex items-center justify-between text-sm text-slate-600">
+        {% if prev_topic %}
+          <a href="{% url 'lesson_detail' prev_topic.slug %}" class="hover:text-slate-900"><i class="fa-solid fa-arrow-left-long mr-2"></i> {{ prev_topic.title }}</a>
+        {% else %}
+          <a href="{% url 'lesson6' %}" class="hover:text-slate-900"><i class="fa-solid fa-arrow-left-long mr-2"></i> Back to Overview</a>
+        {% endif %}
+        {% if next_topic %}
+          <a href="{% url 'lesson_detail' next_topic.slug %}" class="hover:text-slate-900">{{ next_topic.title }} <i class="fa-solid fa-arrow-right-long ml-2"></i></a>
+        {% endif %}
+      </div>
+    </article>
+
+    <aside class="lg:col-span-4 lg:sticky lg:top-20 h-max">
+      <div class="card rounded-2xl p-5 mb-5">
+        <div class="flex items-center justify-between mb-3">
+          <h4 class="font-semibold">On this page</h4>
+          <span class="text-xs text-slate-500">Lesson 13</span>
+        </div>
+        <nav id="toc" class="space-y-2 text-sm"></nav>
+      </div>
+
+      <div class="card rounded-2xl p-5">
+        <h4 class="font-semibold mb-3">All topics</h4>
+        <ul class="space-y-1 text-sm">
+          {% for t in all_topics %}
+          <li>
+            <a href="{% url 'lesson_detail' t.slug %}"
+               class="block px-3 py-2 rounded-lg border border-transparent hover:border-slate-200 hover:bg-slate-50 {% if t.slug == slug %}bg-slate-100 border-slate-200{% endif %}">
+              {{ forloop.counter }}. {{ t.title }}
+            </a>
+          </li>
+          {% endfor %}
+        </ul>
+        <a href="{% url 'lesson6' %}" class="mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-slate-200 hover:bg-slate-50 text-sm">
+          <i class="fa-solid fa-list"></i> Back to Overview
+        </a>
+      </div>
+    </aside>
+  </main>
+
+  <footer class="py-10 border-t">
+    <div class="max-w-6xl mx-auto px-6 text-xs text-slate-500">
+      © <span id="year"></span> Esposito Courses • Lesson 13
+    </div>
+  </footer>
+
+  <script>
+    // year + progress
+    document.getElementById('year').textContent = new Date().getFullYear();
+    const pb = document.getElementById('progressBar');
+    window.addEventListener('scroll', () => {
+      const h = document.documentElement;
+      const scrolled = (h.scrollTop) / (h.scrollHeight - h.clientHeight);
+      pb.style.width = (scrolled * 100) + '%';
+    });
+
+    // TOC
+    const content = document.querySelector('article'); const toc = document.getElementById('toc');
+    const heads = content.querySelectorAll('h2'); const ul = document.createElement('ul'); ul.className = "space-y-1";
+    heads.forEach(h => {
+      if(!h.id){ h.id = h.textContent.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,''); }
+      const li = document.createElement('li');
+      li.innerHTML = `<a href="#${h.id}" class="block px-3 py-2 rounded-lg border border-transparent hover:border-slate-200 hover:bg-slate-50">${h.textContent}</a>`;
+      ul.appendChild(li);
+    }); toc.appendChild(ul);
+
+    // Transfer Task form — localStorage
+    const KEY='esposito_tt_v1';
+    const dont = document.getElementById('dont');
+    const plan = document.getElementById('plan');
+    const reflection = document.getElementById('reflection');
+    const peer = document.getElementById('peer');
+    const preview = document.getElementById('preview');
+    const savedMsg = document.getElementById('savedMsg');
+
+    function buildPreview(){
+      const lines = [];
+      if(dont.value) lines.push(`Mover Don’t: ${dont.value}`);
+      if(plan.value) lines.push(`Preventive Plan: ${plan.value}`);
+      if(reflection.value) lines.push(`Reflection: ${reflection.value}`);
+      if(peer.value) lines.push(`Peer Engagement: ${peer.value}`);
+      preview.textContent = lines.length ? lines.join('\n') : '—';
+    }
+    ['input','change','keyup'].forEach(evt => {
+      [dont,plan,reflection,peer].forEach(el => el.addEventListener(evt, buildPreview));
+    });
+
+    // restore
+    try {
+      const saved = JSON.parse(localStorage.getItem(KEY) || '{}');
+      dont.value = saved.dont || ''; plan.value = saved.plan || '';
+      reflection.value = saved.reflection || ''; peer.value = saved.peer || '';
+      buildPreview();
+    } catch(e){}
+
+    document.getElementById('save').addEventListener('click', () => {
+      localStorage.setItem(KEY, JSON.stringify({
+        dont: dont.value, plan: plan.value, reflection: reflection.value, peer: peer.value
+      }));
+      savedMsg.classList.remove('hidden');
+      setTimeout(()=>savedMsg.classList.add('hidden'), 1200);
+    });
+    document.getElementById('clear').addEventListener('click', () => {
+      localStorage.removeItem(KEY);
+      dont.value = plan.value = reflection.value = peer.value = '';
+      buildPreview();
+    });
+    document.getElementById('copy').addEventListener('click', () => {
+      const ta = document.createElement('textarea');
+      ta.style.position='fixed'; ta.style.opacity='0'; ta.value = preview.textContent;
+      document.body.appendChild(ta); ta.select(); document.execCommand('copy');
+      document.body.removeChild(ta);
+    });
+
+    buildPreview();
+  </script>
+</body>
+</html>

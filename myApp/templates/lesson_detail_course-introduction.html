@@ -1,0 +1,182 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>{{ lesson.title }} — Lesson 1</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet"/>
+  <style>
+    :root{ --ink:#0b1027; --muted:#64748b; --brand:#18AFAB; --soft:#f8fafc; }
+    .ink{color:var(--ink)} .muted{color:var(--muted)} .brand{color:var(--brand)}
+    .card{background:#fff; box-shadow:0 10px 30px rgba(2,6,23,.06)}
+    .progress{height:3px; background:linear-gradient(90deg,var(--brand),#22c55e)}
+  </style>
+</head>
+<body class="bg-white text-slate-900 antialiased">
+    {% include "partials/chatbot.html" %}
+  <!-- progress -->
+  <div id="progressBar" class="fixed top-0 left-0 right-0 z-50 progress" style="width:0%"></div>
+
+  <!-- Breadcrumb -->
+  <nav class="border-b bg-white/80 backdrop-blur sticky top-0 z-40">
+    <div class="max-w-6xl mx-auto px-6 py-3 flex items-center justify-between">
+      <ol class="flex items-center gap-2 text-sm text-slate-500">
+        <li><a href="{% url 'lesson6' %}" class="hover:text-slate-900">Lesson 6 Overview</a></li>
+        <li class="text-slate-400">/</li>
+        <li class="text-slate-900 font-semibold">{{ lesson.title }}</li>
+      </ol>
+      <div class="hidden sm:flex items-center gap-2 text-sm">
+        <button class="px-3 py-1.5 rounded-lg border border-slate-200 hover:bg-slate-50">
+          <i class="fa-regular fa-bookmark mr-2"></i> Save
+        </button>
+        <button class="px-3 py-1.5 rounded-lg border border-slate-200 hover:bg-slate-50">
+          <i class="fa-solid fa-share-nodes mr-2"></i> Share
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <header>
+    <div class="max-w-6xl mx-auto px-6 pt-10 pb-6">
+      <p class="uppercase tracking-[.25em] text-xs brand font-semibold">Lesson 1</p>
+      <h1 class="text-3xl md:text-4xl font-extrabold ink leading-tight mt-1">{{ lesson.subtitle|default:lesson.title }}</h1>
+      <p class="muted mt-3 max-w-3xl">
+        Protect clients, protect yourself, and keep deals drama-free by understanding what movers can—and can’t—do.
+      </p>
+      <div class="mt-4 flex flex-wrap items-center gap-2">
+        <span class="inline-flex items-center gap-2 text-xs md:text-sm px-3 py-1.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
+          <i class="fa-regular fa-clock"></i> {{ lesson.meta.duration|default:"10–15 mins" }}
+        </span>
+        <span class="inline-flex items-center gap-2 text-xs md:text-sm px-3 py-1.5 rounded-full bg-sky-50 text-sky-700 border border-sky-200">
+          <i class="fa-solid fa-signal"></i> {{ lesson.meta.level|default:"All Agents" }}
+        </span>
+        <span class="inline-flex items-center gap-2 text-xs md:text-sm px-3 py-1.5 rounded-full bg-violet-50 text-violet-700 border border-violet-200">
+          <i class="fa-solid fa-toolbox"></i> Scripts + Job Aids
+        </span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Body -->
+  <main class="max-w-6xl mx-auto px-6 pb-16 grid lg:grid-cols-12 gap-8">
+    <article class="lg:col-span-8">
+      <div class="card rounded-2xl p-6 md:p-8">
+        <div class="prose max-w-none">
+          <h2 id="why-this-course-matters" class="text-2xl md:text-3xl font-bold ink">Why This Course Matters</h2>
+          <p class="text-slate-700 leading-relaxed mt-3">
+            For Realtors, moving day is often the final chapter in a transaction—but it’s also the stage where trust can easily be broken.
+            Clients lean on movers for far more than heavy lifting. They assume movers can handle plumbing, wiring, gas, and even last-minute “free favors.”
+          </p>
+          <div class="mt-4 p-4 rounded-xl bg-amber-50 border border-amber-200 text-amber-900">
+            <i class="fa-solid fa-triangle-exclamation mr-2"></i>
+            When those assumptions go wrong, <strong>who gets blamed?</strong> Often the Realtor who made the referral.
+            A single mishap—like a flooded kitchen or damaged appliance—can erase months of goodwill and trigger insurance headaches.
+          </div>
+          <p class="text-slate-700 leading-relaxed mt-4">
+            This course equips you with <strong>deep knowledge of the moving industry’s scope, limitations, and hidden risks.</strong> With this expertise, you’ll:
+          </p>
+          <ul class="list-disc pl-6 text-slate-700 space-y-2 mt-3">
+            <li>Protect your clients from costly mistakes.</li>
+            <li>Protect yourself from liability.</li>
+            <li>Build long-term trust by showing clients you know the realities of moving.</li>
+          </ul>
+
+          <hr class="my-8 border-slate-200"/>
+
+          <h2 id="what-you-will-learn" class="text-2xl md:text-3xl font-bold ink">What You Will Learn</h2>
+          <ul class="mt-4 grid sm:grid-cols-2 gap-3">
+            <li class="flex gap-3"><span class="h-6 w-6 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-700 flex items-center justify-center text-xs font-semibold">1</span><span>Legal & practical limits of mover scope and insurance.</span></li>
+            <li class="flex gap-3"><span class="h-6 w-6 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-700 flex items-center justify-center text-xs font-semibold">2</span><span>Why “free favors” create five- and six-figure risk.</span></li>
+            <li class="flex gap-3"><span class="h-6 w-6 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-700 flex items-center justify-center text-xs font-semibold">3</span><span>Applying do’s & don’ts in real client scenarios.</span></li>
+            <li class="flex gap-3"><span class="h-6 w-6 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-700 flex items-center justify-center text-xs font-semibold">4</span><span>Tested scripts to set expectations before moving day.</span></li>
+            <li class="flex gap-3"><span class="h-6 w-6 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-700 flex items-center justify-center text-xs font-semibold">5</span><span>Quick-reference job aids: guides, checklists, red flags.</span></li>
+          </ul>
+
+          <hr class="my-8 border-slate-200"/>
+
+          <h2 id="the-realtors-advantage" class="text-2xl md:text-3xl font-bold ink">The Realtor’s Advantage</h2>
+          <p class="text-slate-700 leading-relaxed mt-3">
+            Most Realtors only know movers as “pack and transport.” In reality, movers operate under strict regulations and insurer constraints.
+            By learning these limits, you position yourself as the Realtor who:
+          </p>
+          <ul class="list-disc pl-6 text-slate-700 space-y-2 mt-3">
+            <li>Understands the <strong>business side of moving companies</strong> (insurance, DOT rules, liability coverage).</li>
+            <li>Anticipates client mistakes before they happen.</li>
+            <li>Builds stronger partnerships with reputable moving companies.</li>
+          </ul>
+
+          <hr class="my-8 border-slate-200"/>
+
+          <h3 id="client-hook" class="text-xl md:text-2xl font-bold ink">Hook You Can Use with Clients</h3>
+          <div class="mt-3 p-5 rounded-xl bg-slate-50 border border-slate-200">
+            <p class="text-slate-800">
+              <span class="font-semibold">“The most expensive freebie always comes after the words:</span>
+              <em>‘While you’re here, could you just…’</em>”
+            </p>
+            <p class="text-sm text-slate-600 mt-2">
+              Use this line to open the conversation about mover scope and why boundaries protect everyone.
+            </p>
+          </div>
+        </div>
+
+        <!-- CTA row -->
+        <div class="mt-8 flex flex-wrap gap-3">
+          <a href="#" class="px-5 py-3 rounded-xl bg-emerald-600 text-white font-semibold hover:opacity-90">Next: Knowledge Check</a>
+          <a href="#" class="px-5 py-3 rounded-xl border border-slate-300 font-semibold hover:bg-slate-50">Download Job Aid (PDF)</a>
+        </div>
+      </div>
+
+      <!-- Prev/Next -->
+      <div class="mt-6 flex items-center justify-between text-sm text-slate-600">
+        {% if prev_topic %}
+          <a href="{% url 'lesson_detail' prev_topic.slug %}" class="hover:text-slate-900"><i class="fa-solid fa-arrow-left-long mr-2"></i> {{ prev_topic.title }}</a>
+        {% else %}
+          <span></span>
+        {% endif %}
+        {% if next_topic %}
+          <a href="{% url 'lesson_detail' next_topic.slug %}" class="hover:text-slate-900">{{ next_topic.title }} <i class="fa-solid fa-arrow-right-long ml-2"></i></a>
+        {% endif %}
+      </div>
+    </article>
+
+    <!-- Sidebar -->
+    <aside class="lg:col-span-4 lg:sticky lg:top-20 h-max">
+      <div class="card rounded-2xl p-5 mb-5">
+        <h4 class="font-semibold mb-3">All topics</h4>
+        <ul class="space-y-1 text-sm">
+          {% for t in all_topics %}
+          <li>
+            <a href="{% url 'lesson_detail' t.slug %}"
+               class="block px-3 py-2 rounded-lg border border-transparent hover:border-slate-200 hover:bg-slate-50 {% if t.slug == slug %}bg-slate-100 border-slate-200{% endif %}">
+              {{ forloop.counter }}. {{ t.title }}
+            </a>
+          </li>
+          {% endfor %}
+        </ul>
+        <a href="{% url 'lesson6' %}" class="mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-slate-200 hover:bg-slate-50 text-sm">
+          <i class="fa-solid fa-list"></i> Back to Overview
+        </a>
+      </div>
+    </aside>
+  </main>
+
+  <footer class="py-10 border-t">
+    <div class="max-w-6xl mx-auto px-6 text-xs text-slate-500">
+      © <span id="year"></span> Esposito Courses • Lesson 1
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+    const pb = document.getElementById('progressBar');
+    window.addEventListener('scroll', () => {
+      const h = document.documentElement;
+      const scrolled = (h.scrollTop) / (h.scrollHeight - h.clientHeight);
+      pb.style.width = (scrolled * 100) + '%';
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,107 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Curriculum Overview — Lesson 6</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet"/>
+  <style>
+    :root{ --ink:#0b1027; --muted:#64748b; --brand:#18AFAB; --soft:#f8fafc; }
+    .ink{color:var(--ink)} .muted{color:var(--muted)} .brand{color:var(--brand)}
+    .card{background:#fff; box-shadow:0 10px 30px rgba(2,6,23,.08)}
+    details[open]{border-color:rgba(24,175,171,.35)}
+  </style>
+</head>
+<body class="bg-white text-slate-900 antialiased">
+    {% include "partials/chatbot.html" %}
+
+<section class="relative">
+  <div class="max-w-5xl mx-auto px-6 py-10">
+    <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-5 mb-6">
+      <div>
+        <p class="uppercase tracking-[.25em] text-xs font-semibold brand">Curriculum Overview</p>
+        <h1 class="text-3xl md:text-4xl font-extrabold ink leading-tight">Lesson 6 — Mover-Smart Realtors</h1>
+        <p class="muted mt-2">Short, practical modules with scripts, decision trees, and field-ready tools.</p>
+      </div>
+      <div class="flex items-center gap-2 md:gap-3">
+        <span class="inline-flex items-center gap-2 text-sm px-3 py-1.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
+          <i class="fa-regular fa-clock"></i> {{ duration }}
+        </span>
+        <span class="inline-flex items-center gap-2 text-sm px-3 py-1.5 rounded-full bg-sky-50 text-sky-700 border border-sky-200">
+          <i class="fa-solid fa-signal"></i> {{ level }}
+        </span>
+      </div>
+    </div>
+
+    <!-- Toolbar -->
+    <div class="flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between mb-5">
+      <div class="relative w-full sm:max-w-sm">
+        <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
+        <input id="filterInput" type="text" placeholder="Search topics…"
+               class="w-full pl-10 pr-3 py-2.5 rounded-xl border border-slate-200 focus:ring-2 focus:ring-emerald-400 outline-none" />
+      </div>
+      <div class="text-sm text-slate-500"><span id="countShown">{{ topics|length }}</span> topics</div>
+    </div>
+
+    <!-- Accordion -->
+    <div id="accordion" class="space-y-3">
+      {% for t in topics %}
+      <details class="group border border-slate-200 rounded-xl p-5 bg-white"
+               data-title="{{ t.title|lower }}" data-about="{{ t.about|lower }}">
+        <summary class="flex items-center justify-between gap-4 cursor-pointer list-none">
+          <div class="flex items-start gap-3">
+            <span class="inline-flex items-center justify-center h-8 w-8 rounded-lg bg-emerald-50 text-emerald-700 text-sm font-semibold border border-emerald-200">
+              {{ forloop.counter }}
+            </span>
+            <div>
+              <h3 class="font-semibold text-slate-900">{{ t.title }}</h3>
+              <p class="text-sm text-slate-600">{{ t.about }}</p>
+            </div>
+          </div>
+          <svg class="size-5 text-slate-400 group-open:rotate-180 transition-transform" viewBox="0 0 20 20" fill="currentColor">
+            <path d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.24 4.24a.75.75 0 01-1.06 0L5.21 8.29a.75.75 0 01.02-1.08z"/>
+          </svg>
+        </summary>
+
+        <div class="mt-4">
+          <a href="{% url 'lesson_detail' t.slug %}"
+             class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-600 text-white font-semibold hover:opacity-90">
+            View Lesson <i class="fa-solid fa-arrow-right-long"></i>
+          </a>
+        </div>
+      </details>
+      {% endfor %}
+    </div>
+
+    <div class="mt-8 text-xs text-slate-400 text-center">Esposito Courses • Lesson 6 overview</div>
+  </div>
+</section>
+
+<script>
+  // single-open behavior
+  const items = document.querySelectorAll('#accordion details');
+  items.forEach(d => d.addEventListener('toggle', () => {
+    if (d.open) items.forEach(o => { if (o !== d) o.open = false; });
+  }));
+
+  // filter
+  const input = document.getElementById('filterInput');
+  const shown = document.getElementById('countShown');
+  function applyFilter() {
+    const q = (input.value || '').trim().toLowerCase();
+    let count = 0;
+    items.forEach(el => {
+      const hay = (el.dataset.title + ' ' + el.dataset.about);
+      const match = !q || hay.includes(q);
+      el.style.display = match ? '' : 'none';
+      if (match) count++;
+    });
+    shown.textContent = count;
+  }
+  input.addEventListener('input', applyFilter);
+  applyFilter();
+</script>
+</body>
+</html>

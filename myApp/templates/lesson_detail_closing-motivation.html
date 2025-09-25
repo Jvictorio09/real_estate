@@ -1,0 +1,245 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>{{ lesson.title }} — Lesson 15</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet"/>
+  <style>
+    :root{ --ink:#0b1027; --muted:#64748b; --brand:#18AFAB; --soft:#f8fafc; }
+    .ink{color:var(--ink)} .muted{color:var(--muted)} .brand{color:var(--brand)}
+    .card{background:#fff; box-shadow:0 10px 30px rgba(2,6,23,.06)}
+    .progress{height:3px; background:linear-gradient(90deg,var(--brand),#22c55e)}
+    .pill{display:inline-flex;align-items:center;gap:.5rem;padding:.375rem .75rem;border-radius:.75rem;border:1px solid}
+    .sig{font-family: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif}
+  </style>
+</head>
+<body class="bg-white text-slate-900 antialiased">
+    {% include "partials/chatbot.html" %}
+  <!-- progress -->
+  <div id="progressBar" class="fixed top-0 left-0 right-0 z-50 progress" style="width:0%"></div>
+
+  <!-- Breadcrumb -->
+  <nav class="border-b bg-white/80 backdrop-blur sticky top-0 z-40">
+    <div class="max-w-6xl mx-auto px-6 py-3 flex items-center justify-between">
+      <ol class="flex items-center gap-2 text-sm text-slate-500">
+        <li><a href="{% url 'lesson6' %}" class="hover:text-slate-900">Lesson 6 Overview</a></li>
+        <li class="text-slate-400">/</li>
+        <li class="text-slate-900 font-semibold">{{ lesson.title }}</li>
+      </ol>
+      <div class="hidden sm:flex items-center gap-2 text-sm">
+        <button class="px-3 py-1.5 rounded-lg border border-slate-200 hover:bg-slate-50">
+          <i class="fa-regular fa-bookmark mr-2"></i> Save
+        </button>
+        <button class="px-3 py-1.5 rounded-lg border border-slate-200 hover:bg-slate-50">
+          <i class="fa-solid fa-share-nodes mr-2"></i> Share
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <header>
+    <div class="max-w-6xl mx-auto px-6 pt-10 pb-6">
+      <p class="uppercase tracking-[.25em] text-xs brand font-semibold">Lesson 15</p>
+      <h1 class="text-3xl md:text-4xl font-extrabold ink leading-tight mt-1">
+        {{ lesson.subtitle|default:lesson.title }}
+      </h1>
+      <p class="muted mt-3 max-w-3xl">
+        You don’t just move deals—you move people. Finish strong with a clear commitment to safety, trust, and pro-level guidance.
+      </p>
+      <div class="mt-4 flex flex-wrap items-center gap-2">
+        <span class="pill bg-emerald-50 text-emerald-700 border-emerald-200 text-xs md:text-sm">
+          <i class="fa-regular fa-clock"></i> {{ lesson.meta.duration|default:"4–7 mins" }}
+        </span>
+        <span class="pill bg-sky-50 text-sky-700 border-sky-200 text-xs md:text-sm">
+          <i class="fa-solid fa-signal"></i> {{ lesson.meta.level|default:"All Agents" }}
+        </span>
+        <span class="pill bg-violet-50 text-violet-700 border-violet-200 text-xs md:text-sm">
+          <i class="fa-solid fa-heart"></i> Motivation
+        </span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Body -->
+  <main class="max-w-6xl mx-auto px-6 pb-16 grid lg:grid-cols-12 gap-8">
+    <!-- Content -->
+    <article class="lg:col-span-8">
+      <div class="card rounded-2xl p-6 md:p-8">
+        <div class="prose max-w-none">
+          <h2 class="text-2xl md:text-3xl font-bold ink">Bringing It All Together</h2>
+          <p class="text-slate-700">
+            You’ve learned what movers can and cannot do, why “free favors” become costly mistakes, and how to protect both your clients and your reputation. You now carry the knowledge, scripts, and tools that set you apart as a Realtor who not only closes deals, but safeguards clients during one of life’s most stressful transitions.
+          </p>
+
+          <hr class="my-8 border-slate-200"/>
+
+          <h2 class="text-2xl md:text-3xl font-bold ink">Why This Matters for Realtors</h2>
+          <ul class="list-disc pl-6 text-slate-700">
+            <li><strong>Trust is your currency.</strong> Preventing one moving-day disaster can pay dividends in loyalty and referrals.</li>
+            <li><strong>Boundaries are protection, not restriction.</strong> They shield the home, the belongings, and everyone’s peace of mind.</li>
+            <li><strong>Professionalism extends beyond the transaction.</strong> Be remembered long after the sale.</li>
+          </ul>
+
+          <div class="mt-6 p-5 rounded-xl bg-slate-50 border border-slate-200">
+            <p class="text-slate-800"><strong>The Last Word to Clients:</strong> “I care about more than closing the deal. I care about your safety, your money, and your long-term experience.”</p>
+          </div>
+
+          <hr class="my-8 border-slate-200"/>
+
+          <h2 class="text-2xl md:text-3xl font-bold ink">Commitment to Carry Forward</h2>
+          <ol class="list-decimal pl-6 text-slate-700 space-y-1">
+            <li>Share mover boundaries with every client.</li>
+            <li>Use the scripts and job aids provided.</li>
+            <li>Never compromise on safety or professionalism for convenience.</li>
+          </ol>
+
+          <!-- Commitment pledge -->
+          <div class="mt-6 p-5 rounded-2xl border border-emerald-200 bg-emerald-50/40">
+            <h3 class="font-semibold">My Pledge</h3>
+            <p class="text-sm text-slate-700">Sign and save your commitment (stored on this device for demo purposes).</p>
+            <div class="mt-3 grid md:grid-cols-2 gap-3">
+              <input id="pledgeName" type="text" class="w-full rounded-xl border border-slate-300 px-3 py-2" placeholder="Your name"/>
+              <input id="pledgeDate" type="date" class="w-full rounded-xl border border-slate-300 px-3 py-2"/>
+            </div>
+            <textarea id="pledgeText" rows="3" class="mt-3 w-full rounded-xl border border-slate-300 px-3 py-2 sig" placeholder="I commit to educating clients, enforcing mover boundaries, and protecting safety on every move."></textarea>
+            <div class="mt-3 flex flex-wrap gap-3">
+              <button id="savePledge" type="button" class="px-4 py-2 rounded-xl bg-emerald-600 text-white font-semibold hover:opacity-90">
+                <i class="fa-solid fa-floppy-disk mr-2"></i> Save Pledge
+              </button>
+              <button id="clearPledge" type="button" class="px-4 py-2 rounded-xl border border-slate-300 font-semibold hover:bg-slate-50">
+                <i class="fa-regular fa-trash-can mr-2"></i> Clear
+              </button>
+              <button id="printPledge" type="button" class="px-4 py-2 rounded-xl border border-slate-300 font-semibold hover:bg-slate-50">
+                <i class="fa-solid fa-print mr-2"></i> Print
+              </button>
+            </div>
+            <p id="pledgeSaved" class="hidden text-sm text-emerald-700 mt-2">Saved!</p>
+          </div>
+
+          <hr class="my-8 border-slate-200"/>
+
+          <h2 class="text-2xl md:text-3xl font-bold ink">Closing Line</h2>
+          <p class="text-slate-700">
+            When clients trust you to guide them through the move, they expect you to know the risks. By sharing boundaries, scripts, and real stories, you become the Realtor who not only makes moves happen—but makes them safe, smooth, and stress-free.
+          </p>
+        </div>
+
+        <!-- CTA row -->
+        <div class="mt-8 flex flex-wrap gap-3">
+          <a href="{% url 'lesson6' %}"
+             class="px-5 py-3 rounded-xl border border-slate-300 font-semibold hover:bg-slate-50">
+            <i class="fa-solid fa-list mr-2"></i> Back to Overview
+          </a>
+          <a href="#" class="px-5 py-3 rounded-xl bg-emerald-600 text-white font-semibold hover:opacity-90">
+            Download Completion Pack (PDF)
+          </a>
+        </div>
+      </div>
+
+      <!-- Prev/Next -->
+      <div class="mt-6 flex items-center justify-between text-sm text-slate-600">
+        {% if prev_topic %}
+          <a href="{% url 'lesson_detail' prev_topic.slug %}" class="hover:text-slate-900"><i class="fa-solid fa-arrow-left-long mr-2"></i> {{ prev_topic.title }}</a>
+        {% else %}
+          <span></span>
+        {% endif %}
+        {% if next_topic %}
+          <a href="{% url 'lesson_detail' next_topic.slug %}" class="hover:text-slate-900">{{ next_topic.title }} <i class="fa-solid fa-arrow-right-long ml-2"></i></a>
+        {% endif %}
+      </div>
+    </article>
+
+    <!-- Sidebar -->
+    <aside class="lg:col-span-4 lg:sticky lg:top-20 h-max">
+      <div class="card rounded-2xl p-5 mb-5">
+        <div class="flex items-center justify-between mb-3">
+          <h4 class="font-semibold">On this page</h4>
+          <span class="text-xs text-slate-500">Lesson 15</span>
+        </div>
+        <nav id="toc" class="space-y-2 text-sm"></nav>
+      </div>
+
+      <div class="card rounded-2xl p-5">
+        <h4 class="font-semibold mb-3">All topics</h4>
+        <ul class="space-y-1 text-sm">
+          {% for t in all_topics %}
+          <li>
+            <a href="{% url 'lesson_detail' t.slug %}"
+               class="block px-3 py-2 rounded-lg border border-transparent hover:border-slate-200 hover:bg-slate-50 {% if t.slug == slug %}bg-slate-100 border-slate-200{% endif %}">
+              {{ forloop.counter }}. {{ t.title }}
+            </a>
+          </li>
+          {% endfor %}
+        </ul>
+        <a href="{% url 'lesson6' %}" class="mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-slate-200 hover:bg-slate-50 text-sm">
+          <i class="fa-solid fa-list"></i> Back to Overview
+        </a>
+      </div>
+    </aside>
+  </main>
+
+  <footer class="py-10 border-t">
+    <div class="max-w-6xl mx-auto px-6 text-xs text-slate-500">
+      © <span id="year"></span> Esposito Courses • Lesson 15
+    </div>
+  </footer>
+
+  <script>
+    // year + progress
+    document.getElementById('year').textContent = new Date().getFullYear();
+    const pb = document.getElementById('progressBar');
+    window.addEventListener('scroll', () => {
+      const h = document.documentElement;
+      const scrolled = (h.scrollTop) / (h.scrollHeight - h.clientHeight);
+      pb.style.width = (scrolled * 100) + '%';
+    });
+
+    // TOC from h2s
+    const content = document.querySelector('article'), toc = document.getElementById('toc');
+    const heads = content.querySelectorAll('h2'); const ul = document.createElement('ul'); ul.className="space-y-1";
+    heads.forEach(h=>{ if(!h.id){ h.id=h.textContent.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,''); }
+      const li=document.createElement('li'); li.innerHTML=`<a href="#${h.id}" class="block px-3 py-2 rounded-lg border border-transparent hover:border-slate-200 hover:bg-slate-50">${h.textContent}</a>`;
+      ul.appendChild(li);
+    }); toc.appendChild(ul);
+
+    // Pledge localStorage
+    const KEY='esposito_pledge_v1';
+    const nameEl = document.getElementById('pledgeName');
+    const dateEl = document.getElementById('pledgeDate');
+    const textEl = document.getElementById('pledgeText');
+    const savedEl = document.getElementById('pledgeSaved');
+
+    // restore
+    try{
+      const saved = JSON.parse(localStorage.getItem(KEY)||'{}');
+      if(saved.name) nameEl.value = saved.name;
+      if(saved.date) dateEl.value = saved.date;
+      if(saved.text) textEl.value = saved.text;
+    }catch(e){}
+
+    document.getElementById('savePledge').addEventListener('click', ()=>{
+      localStorage.setItem(KEY, JSON.stringify({
+        name: nameEl.value.trim(),
+        date: dateEl.value,
+        text: textEl.value.trim(),
+        ts: Date.now()
+      }));
+      savedEl.classList.remove('hidden');
+      setTimeout(()=>savedEl.classList.add('hidden'), 1200);
+      // mark course complete
+      localStorage.setItem('esposito_course_complete', JSON.stringify({done:true, when:new Date().toISOString()}));
+    });
+
+    document.getElementById('clearPledge').addEventListener('click', ()=>{
+      localStorage.removeItem(KEY);
+      nameEl.value=''; dateEl.value=''; textEl.value='';
+    });
+
+    document.getElementById('printPledge').addEventListener('click', ()=> window.print());
+  </script>
+</body>
+</html>

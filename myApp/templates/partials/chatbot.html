@@ -1,0 +1,426 @@
+{% load static %}
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet"/>
+
+<!-- Floating AI Chat (Esposito) -->
+<div id="espo-chat" class="fixed z-50 bottom-5 right-5">
+  <!-- Launcher -->
+  <button id="espoLauncher"
+    class="group w-14 h-14 rounded-full shadow-lg flex items-center justify-center ring-1 ring-slate-200
+           bg-gradient-to-br from-emerald-500 to-teal-600 text-white hover:scale-[1.03] transition
+           relative">
+    <i class="fa-solid fa-robot text-lg"></i>
+    <span id="espoBadge" class="absolute -top-1 -right-1 hidden w-4 h-4 rounded-full bg-rose-500 ring-2 ring-white"></span>
+  </button>
+
+  <!-- Panel -->
+  <div id="espoPanel"
+       class="hidden w-[92vw] md:w-[380px] max-w-[420px] h-[75vh] md:h-[600px] rounded-2xl overflow-hidden
+              shadow-2xl border border-slate-200 bg-white/70 backdrop-blur supports-[backdrop-filter]:bg-white/60
+              dark:bg-slate-900/70 dark:border-slate-700">
+    <!-- Header -->
+    <div class="relative px-4 py-3 border-b bg-gradient-to-r from-emerald-600 to-teal-600 text-white">
+      <div class="flex items-center gap-3">
+        <div class="w-9 h-9 rounded-full bg-white/20 flex items-center justify-center">
+          <i class="fa-solid fa-robot"></i>
+        </div>
+        <div class="flex-1">
+          <div class="font-semibold">Esposito AI</div>
+          <div class="text-xs text-white/80">Ask about topics, scripts, do’s & don’ts</div>
+        </div>
+        <button id="espoMin" class="text-white/90 hover:text-white"><i class="fa-solid fa-minus"></i></button>
+        <button id="espoClose" class="ml-2 text-white/90 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="absolute inset-x-0 -bottom-px h-px bg-white/30"></div>
+    </div>
+
+    <!-- Messages -->
+    <div id="espoScroll" class="h-[calc(100%-146px)] p-4 space-y-3 overflow-y-auto bg-slate-50 dark:bg-slate-950/40">
+      <!-- Seed -->
+      <div class="flex items-start gap-3">
+        <div class="w-8 h-8 rounded-full bg-emerald-600 text-white flex items-center justify-center">
+          <i class="fa-solid fa-robot text-sm"></i>
+        </div>
+        <div class="max-w-[80%] rounded-2xl px-3.5 py-2.5 bg-white border border-slate-200 text-slate-800
+                    dark:bg-slate-900 dark:border-slate-700 dark:text-slate-100">
+          <div class="text-sm">
+            Hi! I’m your course assistant. Try a quick question or tap a suggestion below.
+          </div>
+        </div>
+      </div>
+
+      <!-- Suggestions -->
+      <div class="flex flex-wrap gap-2 pl-11">
+        <button data-suggest="Give me the top Do’s & Don’ts."
+          class="px-3 py-1.5 rounded-full text-xs bg-white border border-slate-200 hover:bg-slate-50
+                 dark:bg-slate-900 dark:border-slate-700 dark:text-slate-200">Top Do’s & Don’ts</button>
+        <button data-suggest="Write a client script to decline a fridge water line request."
+          class="px-3 py-1.5 rounded-full text-xs bg-white border border-slate-200 hover:bg-slate-50
+                 dark:bg-slate-900 dark:border-slate-700 dark:text-slate-200">Fridge-line script</button>
+        <button data-suggest="What should movers never do? Summarize in 5 bullets."
+          class="px-3 py-1.5 rounded-full text-xs bg-white border border-slate-200 hover:bg-slate-50
+                 dark:bg-slate-900 dark:border-slate-700 dark:text-slate-200">What movers can’t do</button>
+        <button data-suggest="Give me a short story that explains the ‘expensive freebie’ trap."
+          class="px-3 py-1.5 rounded-full text-xs bg-white border border-slate-200 hover:bg-slate-50
+                 dark:bg-slate-900 dark:border-slate-700 dark:text-slate-200">Freebie story</button>
+      </div>
+    </div>
+
+    <!-- Composer -->
+    <div class="border-t bg-white/70 dark:bg-slate-900/70 dark:border-slate-700 p-3">
+      <form id="espoForm" class="space-y-2">
+        <div class="flex items-end gap-2">
+            <textarea id="espoInput" rows="1" required
+                placeholder="Type your question…  (Enter to send • Shift+Enter for newline)"
+                class="flex-1 rounded-xl border border-slate-300 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100
+                    px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-300 resize-none"></textarea>
+
+            <!-- Mic / Dictation -->
+            <button type="button" id="espoMic"
+                class="shrink-0 rounded-xl px-3 py-2 border border-slate-300 dark:border-slate-700
+                    hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200"
+                aria-label="Start voice dictation" title="Start voice dictation">
+                <i class="fa-solid fa-microphone"></i>
+            </button>
+
+            <button id="espoSend" type="submit"
+                class="shrink-0 rounded-xl px-4 py-2 bg-emerald-600 text-white font-medium hover:opacity-90 disabled:opacity-50">
+                Send
+            </button>
+        </div>
+
+        <div class="flex items-center justify-between text-[11px]">
+          <div class="text-slate-500 dark:text-slate-400">
+            <kbd class="px-1 border rounded">/</kbd> commands: <span class="underline decoration-dotted">/script</span>, <span class="underline decoration-dotted">/dos</span>, <span class="underline decoration-dotted">/story</span>
+          </div>
+          <div class="flex gap-2">
+            <button type="button" id="espoClear" class="text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-white">Clear</button>
+            <span class="text-slate-400">•</span>
+            <button type="button" id="espoDownload" class="text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-white">Download</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ---------- Configuration ---------- */
+window.EspositoChat = {
+  webhook: "https://katalyst-crm.fly.dev/webhook/1390f5ad-851a-4b6f-ba50-2f084cfc436d",
+  // If you use your Django proxy, switch to: webhook: "/api/chat",
+  storageKey: "esposito_chat_v2",
+  brand: { primary: "#18AFAB" },
+  // optional page context to help the bot (you can overwrite per-page)
+  context: { path: window.location.pathname, title: document.title }
+};
+
+/* ---------- Chat Implementation (vanilla JS) ---------- */
+(function () {
+  const cfg = window.EspositoChat;
+  const W = cfg.webhook, KEY = cfg.storageKey || "esposito_chat_v2";
+  const $ = (s, r=document)=>r.querySelector(s);
+  const launcher = $("#espoLauncher"), panel=$("#espoPanel"), closeBtn=$("#espoClose"),
+        minBtn=$("#espoMin"), scroll=$("#espoScroll"), form=$("#espoForm"), input=$("#espoInput"),
+        badge=$("#espoBadge"), clearBtn=$("#espoClear"), dlBtn=$("#espoDownload"),micBtn=$("#espoMic");
+
+  let history = load();
+  if (history.length) { history.forEach(m => append(m.role, m.text, false, m.ts)); setTimeout(scrollBottom, 15); }
+
+  // chips
+  document.querySelectorAll('[data-suggest]').forEach(b => b.addEventListener('click', () => {
+    sendNow(b.getAttribute('data-suggest'));
+  }));
+
+  launcher.addEventListener("click", () => {
+  panel.classList.toggle("hidden");
+  if (!panel.classList.contains("hidden")) {
+    launcher.classList.add("hidden");     // hide the head
+    badge.classList.add("hidden");
+    input.focus();
+  } else {
+    launcher.classList.remove("hidden");  // show again
+  }
+});
+closeBtn.addEventListener("click", () => {
+  panel.classList.add("hidden");
+  launcher.classList.remove("hidden");
+});
+minBtn.addEventListener("click", () => {
+  panel.classList.add("hidden");
+  launcher.classList.remove("hidden");
+});
+
+
+  input.addEventListener("keydown", (e)=>{
+    if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); $("#espoSend").click(); }
+    if (e.key === "/" && !input.value) { // tiny command hint
+      setTimeout(()=> input.setSelectionRange(input.value.length, input.value.length),0);
+    }
+  });
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const text = input.value.trim();
+    if (!text) return;
+    input.value = "";
+    await sendNow(text);
+  });
+
+  clearBtn.addEventListener("click", () => {
+    history = []; persist();
+    scroll.innerHTML = scroll.innerHTML.split('<!-- Seed -->')[0] + scroll.innerHTML.split('<!-- Seed -->')[1]; // keep seed + chips
+    // cheap refresh: reload page section
+    window.location.reload();
+  });
+
+  dlBtn.addEventListener("click", () => {
+    const blob = new Blob([history.map(m => `[${new Date(m.ts).toLocaleString()}] ${m.role.toUpperCase()}: ${m.text}`).join("\n")], {type:"text/plain"});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a'); a.href = url; a.download = "esposito-chat-transcript.txt";
+    document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+  });
+
+  async function sendNow(text) {
+    // handle quick slash-commands
+    const cmd = text.trim().split(/\s+/)[0].toLowerCase();
+    if (cmd === '/dos') text = "Give me the top Do’s & Don’ts in 7 bullets.";
+    if (cmd === '/script') text = "Write a short client-safe script declining a risky mover request, with one-sentence rationale.";
+    if (cmd === '/story') text = "Give a 4-sentence story explaining the ‘expensive freebie’ trap in relatable language.";
+
+    append("user", text); persist();
+    const typingId = typing();
+
+    try {
+      const payload = {
+        message: text,
+        session_id: sid(),
+        context_url: location.href,
+        context_title: cfg.context?.title || document.title,
+        page_path: cfg.context?.path || location.pathname,
+        user_agent: navigator.userAgent,
+        ts: new Date().toISOString()
+      };
+
+      const res = await fetch(W, { method:"POST", headers:{ "Content-Type":"application/json" }, body: JSON.stringify(payload) });
+      const ct = res.headers.get("content-type") || "";
+      let reply = "";
+      if (!res.ok) reply = `Sorry—server returned ${res.status}.`;
+      else if (ct.includes("application/json")) {
+        const data = await res.json();
+        reply = pickReply(data);
+      } else {
+        reply = await res.text();
+      }
+
+      removeTyping(typingId);
+      append("assistant", sanitize(cleanJSONish(reply))); persist();
+      if (panel.classList.contains("hidden")) badge.classList.remove("hidden");
+    } catch (e) {
+      removeTyping(typingId);
+      append("assistant", "Network hiccup. Please try again."); persist();
+    }
+  }
+
+  function append(role, text, animate=true, ts=null) {
+    const wrap = document.createElement("div");
+    wrap.className = role === "user" ? "flex items-start gap-3 justify-end" : "flex items-start gap-3";
+
+    const avatar = document.createElement("div");
+    avatar.className = "w-8 h-8 rounded-full flex items-center justify-center " + (role === "user" ? "bg-slate-800 text-white" : "bg-emerald-600 text-white");
+    avatar.innerHTML = role === "user" ? '<i class="fa-solid fa-user text-sm"></i>' : '<i class="fa-solid fa-robot text-sm"></i>';
+
+    const bubble = document.createElement("div");
+    bubble.className = "max-w-[80%] rounded-2xl px-3.5 py-2.5 " + (role === "user"
+      ? "bg-emerald-600 text-white"
+      : "bg-white border border-slate-200 text-slate-800 dark:bg-slate-900 dark:border-slate-700 dark:text-slate-100");
+
+    const inner = document.createElement("div");
+    inner.className = "text-sm whitespace-pre-wrap leading-relaxed";
+    inner.innerHTML = renderMarkdown(text); // minimal markdown
+    bubble.appendChild(inner);
+
+    // footer: timestamp + copy (assistant only)
+    const meta = document.createElement("div");
+    meta.className = "mt-1 flex items-center gap-3 text-[10px] " + (role === "user" ? "text-white/80" : "text-slate-500");
+    const timeStr = new Date(ts || Date.now()).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+    meta.innerHTML = `<span>${timeStr}</span>`;
+    if (role !== "user") {
+      const copyBtn = document.createElement("button");
+      copyBtn.className = "hover:underline decoration-dotted";
+      copyBtn.textContent = "Copy";
+      copyBtn.addEventListener('click', () => {
+        navigator.clipboard.writeText(text);
+        copyBtn.textContent = "Copied";
+        setTimeout(()=>copyBtn.textContent="Copy", 900);
+      });
+      meta.appendChild(copyBtn);
+    }
+    bubble.appendChild(meta);
+
+    if (role === "user") { wrap.appendChild(bubble); wrap.appendChild(avatar); }
+    else { wrap.appendChild(avatar); wrap.appendChild(bubble); }
+
+    if (animate) {
+      bubble.style.opacity="0"; bubble.style.transform="translateY(4px)";
+      requestAnimationFrame(()=>{ bubble.style.transition="all .18s ease"; bubble.style.opacity="1"; bubble.style.transform="translateY(0)"; });
+    }
+
+    scroll.appendChild(wrap);
+    scrollBottom();
+
+    history.push({ role, text, ts: ts || Date.now() });
+  }
+
+  function typing(){
+    const id = "espo-typing-" + Math.random().toString(36).slice(2);
+    const wrap = document.createElement("div");
+    wrap.id = id; wrap.className = "flex items-start gap-3";
+    wrap.innerHTML = `
+      <div class="w-8 h-8 rounded-full bg-emerald-600 text-white flex items-center justify-center">
+        <i class="fa-solid fa-robot text-sm"></i>
+      </div>
+      <div class="max-w-[80%] rounded-2xl px-3.5 py-2.5 bg-white border border-slate-200 dark:bg-slate-900 dark:border-slate-700">
+        <div class="flex gap-1">
+          <span class="w-2 h-2 rounded-full bg-slate-300 animate-bounce" style="animation-delay:0ms"></span>
+          <span class="w-2 h-2 rounded-full bg-slate-300 animate-bounce" style="animation-delay:120ms"></span>
+          <span class="w-2 h-2 rounded-full bg-slate-300 animate-bounce" style="animation-delay:240ms"></span>
+        </div>
+      </div>`;
+    scroll.appendChild(wrap); scrollBottom(); return id;
+  }
+  function removeTyping(id){ const el = document.getElementById(id); if (el) el.remove(); }
+  function scrollBottom(){ scroll.scrollTo({ top: scroll.scrollHeight, behavior: "smooth" }); }
+  function sid(){ const K = KEY+"_sid"; let v = localStorage.getItem(K); if (!v){ v = Math.random().toString(36).slice(2); localStorage.setItem(K, v); } return v; }
+  function persist(){ try { localStorage.setItem(KEY, JSON.stringify(history.slice(-200))); } catch(e){} }
+  function load(){ try { return JSON.parse(localStorage.getItem(KEY) || "[]"); } catch(e){ return []; } }
+
+  // Minimal Markdown → HTML (bold, italic, links, line breaks)
+  function renderMarkdown(s){
+    const esc = sanitize(s);
+    return esc
+      .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
+      .replace(/\*(.+?)\*/g, "<em>$1</em>")
+      .replace(/`(.+?)`/g, "<code class='px-1 py-0.5 rounded bg-slate-100 dark:bg-slate-800'>$1</code>")
+      .replace(/(https?:\/\/[^\s)]+)(?![^<]*>)/g, '<a href="$1" target="_blank" class="underline decoration-dotted">$1</a>')
+      .replace(/\n/g, "<br/>");
+  }
+  // Keep things safe
+  function sanitize(s){ const d=document.createElement('div'); d.textContent=String(s||""); return d.textContent; }
+
+  // If the webhook returns JSON or JSON-ish text, pull the main field
+  function cleanJSONish(txt){
+    try {
+      const t = typeof txt === "string" ? txt.trim() : txt;
+      if (typeof t !== "string") return txt;
+      // detect JSON object in string
+      if (t.startsWith("{") && t.endsWith("}")) {
+        const obj = JSON.parse(t);
+        return pickReply(obj);
+      }
+      return txt;
+    } catch(e){ return txt; }
+  }
+  function pickReply(obj){
+    return obj.reply || obj.text || obj.message || obj.Response || obj.content ||
+           (obj.choices && obj.choices[0]?.message?.content) ||
+           (typeof obj === "string" ? obj : JSON.stringify(obj, null, 2));
+  }
+})();
+
+(function initDictation(){
+  const micBtn = document.getElementById("espoMic");           // ensure we can access it here
+  const input  = document.getElementById("espoInput");         // local refs (no scope issues)
+  if (!micBtn || !input) return;
+
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SR) {
+    micBtn.classList.add("opacity-50","cursor-not-allowed");
+    micBtn.title = "Voice dictation not supported in this browser";
+    micBtn.disabled = true;
+    return;
+  }
+
+  const rec = new SR();
+  rec.continuous = true;
+  rec.interimResults = true;
+  rec.lang = "en-US";
+
+  let listening = false;
+  let interim = "";
+
+  // tiny helper to add a soft glow on top of Tailwind pulse
+  function addGlow(el) {
+    el.style.boxShadow = "0 0 0 4px rgba(16,185,129,.25), 0 10px 25px rgba(16,185,129,.25)";
+  }
+  function clearGlow(el) {
+    el.style.boxShadow = "";
+  }
+
+  function setMic(state){
+    // states: "idle" | "starting" | "listening"
+    if (state === "starting") {
+      micBtn.classList.remove("hover:bg-slate-50","text-slate-700","dark:text-slate-200",
+                              "bg-rose-600","border-rose-600","text-white");
+      micBtn.classList.add("bg-emerald-600","text-white","ring-4","ring-emerald-300","animate-pulse");
+      addGlow(micBtn);
+      micBtn.title = "Starting… awaiting mic permission";
+      micBtn.setAttribute("aria-label","Starting microphone");
+      micBtn.innerHTML = '<i class="fa-solid fa-microphone"></i>';
+      input.placeholder = "Starting… allow microphone to begin";
+    } else if (state === "listening") {
+      micBtn.classList.remove("hover:bg-slate-50","text-slate-700","dark:text-slate-200");
+      micBtn.classList.add("bg-emerald-600","text-white","ring-4","ring-emerald-300","animate-pulse");
+      addGlow(micBtn);
+      micBtn.title = "Listening… click to stop";
+      micBtn.setAttribute("aria-label","Stop voice dictation");
+      micBtn.innerHTML = '<i class="fa-solid fa-microphone-lines"></i>';
+      input.placeholder = "Listening… speak now";
+    } else {
+      micBtn.classList.remove("bg-emerald-600","text-white","ring-4","ring-emerald-300","animate-pulse",
+                              "bg-rose-600","border-rose-600");
+      micBtn.classList.add("hover:bg-slate-50","text-slate-700","dark:text-slate-200");
+      clearGlow(micBtn);
+      micBtn.title = "Start voice dictation";
+      micBtn.setAttribute("aria-label","Start voice dictation");
+      micBtn.innerHTML = '<i class="fa-solid fa-microphone"></i>';
+      input.placeholder = "Type your question…  (Enter to send • Shift+Enter for newline)";
+    }
+  }
+
+  micBtn.addEventListener("click", () => {
+    if (!listening) {
+      // show immediate “starting” feedback before onstart fires
+      setMic("starting");
+      try { rec.start(); } catch(_) {} // safe-start
+    } else {
+      rec.stop();
+    }
+  });
+
+  rec.onstart = () => { listening = true; setMic("listening"); };
+  rec.onend   = () => { listening = false; setMic("idle"); interim = ""; clearGlow(micBtn); };
+
+  rec.onerror = (e) => {
+    listening = false; setMic("idle"); interim = ""; clearGlow(micBtn);
+    if (e.error === "not-allowed" || e.error === "service-not-allowed") {
+      micBtn.title = "Microphone permission denied";
+    } else {
+      micBtn.title = "Microphone error — try again";
+    }
+  };
+
+  rec.onresult = (evt) => {
+    let finalChunk = "";
+    for (let i = evt.resultIndex; i < evt.results.length; i++) {
+      const res = evt.results[i];
+      if (res.isFinal) finalChunk += res[0].transcript;
+      else interim = res[0].transcript;
+    }
+    if (finalChunk) {
+      input.value = (input.value ? input.value.trimEnd() + " " : "") + finalChunk.trim() + " ";
+      input.dispatchEvent(new Event("input"));
+    }
+    if (interim && listening) input.placeholder = "Listening… " + interim;
+  };
+})();
+</script>

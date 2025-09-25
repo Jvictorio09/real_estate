@@ -1,0 +1,343 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>{{ lesson.title }} — Lesson 7</title>
+  <script src="https://cdn.tailwindcss.com"></script>  {# remove if Tailwind is global #}
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet"/>
+  <style>
+    :root{ --ink:#0b1027; --muted:#64748b; --brand:#18AFAB; --soft:#f8fafc; }
+    .ink{color:var(--ink)} .muted{color:var(--muted)} .brand{color:var(--brand)}
+    .card{background:#fff; box-shadow:0 10px 30px rgba(2,6,23,.06)}
+    .progress{height:3px; background:linear-gradient(90deg,var(--brand),#22c55e)}
+    .kbd{border:1px solid #e2e8f0;border-bottom-width:2px;padding:.125rem .375rem;border-radius:.5rem;font-size:.75rem}
+    .check{display:inline-flex;align-items:center;justify-content:center;height:1.5rem;width:1.5rem;border-radius:.5rem;border:1px solid #86efac;background:#ecfdf5}
+    .xmark{display:inline-flex;align-items:center;justify-content:center;height:1.5rem;width:1.5rem;border-radius:.5rem;border:1px solid #fecaca;background:#fff1f2}
+  </style>
+</head>
+<body class="bg-white text-slate-900 antialiased">
+    {% include "partials/chatbot.html" %}
+  <!-- progress -->
+  <div id="progressBar" class="fixed top-0 left-0 right-0 z-50 progress" style="width:0%"></div>
+
+  <!-- Breadcrumb -->
+  <nav class="border-b bg-white/80 backdrop-blur sticky top-0 z-40">
+    <div class="max-w-6xl mx-auto px-6 py-3 flex items-center justify-between">
+      <ol class="flex items-center gap-2 text-sm text-slate-500">
+        <li><a href="{% url 'lesson6' %}" class="hover:text-slate-900">Lesson 6 Overview</a></li>
+        <li class="text-slate-400">/</li>
+        <li class="text-slate-900 font-semibold">{{ lesson.title }}</li>
+      </ol>
+      <div class="hidden sm:flex items-center gap-2 text-sm">
+        <button class="px-3 py-1.5 rounded-lg border border-slate-200 hover:bg-slate-50">
+          <i class="fa-regular fa-bookmark mr-2"></i> Save
+        </button>
+        <button class="px-3 py-1.5 rounded-lg border border-slate-200 hover:bg-slate-50">
+          <i class="fa-solid fa-share-nodes mr-2"></i> Share
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <header>
+    <div class="max-w-6xl mx-auto px-6 pt-10 pb-6">
+      <p class="uppercase tracking-[.25em] text-xs brand font-semibold">Lesson 7</p>
+      <h1 class="text-3xl md:text-4xl font-extrabold ink leading-tight mt-1">
+        {{ lesson.subtitle|default:lesson.title }}
+      </h1>
+      <p class="muted mt-3 max-w-3xl">
+        Movers operate within clear boundaries. This guide helps Realtors communicate those boundaries—confidently and early.
+      </p>
+      <div class="mt-4 flex flex-wrap items-center gap-2">
+        <span class="inline-flex items-center gap-2 text-xs md:text-sm px-3 py-1.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
+          <i class="fa-regular fa-clock"></i> {{ lesson.meta.duration|default:"10–15 mins" }}
+        </span>
+        <span class="inline-flex items-center gap-2 text-xs md:text-sm px-3 py-1.5 rounded-full bg-sky-50 text-sky-700 border border-sky-200">
+          <i class="fa-solid fa-signal"></i> {{ lesson.meta.level|default:"All Agents" }}
+        </span>
+        <span class="inline-flex items-center gap-2 text-xs md:text-sm px-3 py-1.5 rounded-full bg-violet-50 text-violet-700 border border-violet-200">
+          <i class="fa-solid fa-list-check"></i> Checklist
+        </span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Body -->
+  <main class="max-w-6xl mx-auto px-6 pb-16 grid lg:grid-cols-12 gap-8">
+    <!-- Content -->
+    <article class="lg:col-span-8">
+      <div class="card rounded-2xl p-6 md:p-8">
+        <div class="prose max-w-none">
+          <p class="text-slate-700">
+            Movers work within a clear professional boundary. Realtors who can communicate these rules protect both their clients and themselves from costly mistakes.
+          </p>
+
+          <hr class="my-8 border-slate-200"/>
+
+          <h2 id="dos" class="text-2xl md:text-3xl font-bold ink">The Do’s (Best Practices Realtors Should Encourage Clients To Follow)</h2>
+
+          <!-- Do's grid -->
+          <div class="mt-5 grid md:grid-cols-2 gap-4">
+            <div class="p-4 rounded-xl border border-emerald-200 bg-emerald-50/40">
+              <div class="flex items-start gap-3">
+                <span class="check"><i class="fa-solid fa-check text-emerald-600 text-xs"></i></span>
+                <div>
+                  <p class="font-semibold">Do Pack and Label Electronics Yourself</p>
+                  <p class="text-slate-700 text-sm mt-1">Movers can move boxes, but they aren’t responsible for how electronics were packed. Labels reduce disputes.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="p-4 rounded-xl border border-emerald-200 bg-emerald-50/40">
+              <div class="flex items-start gap-3">
+                <span class="check"><i class="fa-solid fa-check text-emerald-600 text-xs"></i></span>
+                <div>
+                  <p class="font-semibold">Do Photograph Valuables & Test Appliances</p>
+                  <p class="text-slate-700 text-sm mt-1">“Before” pics/videos protect everyone. If something was already damaged or dead, movers won’t be unfairly blamed.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="p-4 rounded-xl border border-emerald-200 bg-emerald-50/40">
+              <div class="flex items-start gap-3">
+                <span class="check"><i class="fa-solid fa-check text-emerald-600 text-xs"></i></span>
+                <div>
+                  <p class="font-semibold">Do Confirm Insurance & Claims in Advance</p>
+                  <p class="text-slate-700 text-sm mt-1">Basic coverage is often by weight (e.g., $0.60/lb). For high-value items, recommend <strong>full value protection</strong> or supplemental insurance.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="p-4 rounded-xl border border-emerald-200 bg-emerald-50/40">
+              <div class="flex items-start gap-3">
+                <span class="check"><i class="fa-solid fa-check text-emerald-600 text-xs"></i></span>
+                <div>
+                  <p class="font-semibold">Do Keep Cash, Jewelry & Irreplaceables With You</p>
+                  <p class="text-slate-700 text-sm mt-1">Passports, rings, cash—clients carry these personally. Don’t put them in the truck.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="p-4 rounded-xl border border-emerald-200 bg-emerald-50/40">
+              <div class="flex items-start gap-3">
+                <span class="check"><i class="fa-solid fa-check text-emerald-600 text-xs"></i></span>
+                <div>
+                  <p class="font-semibold">Do Prepare the Home for Movers</p>
+                  <p class="text-slate-700 text-sm mt-1">Clear hallways, secure pets, reserve elevators/loading docks. Fewer surprises → fewer incidents.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="p-4 rounded-xl border border-emerald-200 bg-emerald-50/40">
+              <div class="flex items-start gap-3">
+                <span class="check"><i class="fa-solid fa-check text-emerald-600 text-xs"></i></span>
+                <div>
+                  <p class="font-semibold">Do Tip Movers Fairly (in Cash)</p>
+                  <p class="text-slate-700 text-sm mt-1">Rule of thumb: <strong>5–10%</strong> of the move or <strong>$20–$50 per mover</strong>, based on complexity.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="p-4 rounded-xl border border-emerald-200 bg-emerald-50/40 md:col-span-2">
+              <div class="flex items-start gap-3">
+                <span class="check"><i class="fa-solid fa-check text-emerald-600 text-xs"></i></span>
+                <div>
+                  <p class="font-semibold">Do Create a “Day-Of” Essentials Box</p>
+                  <p class="text-slate-700 text-sm mt-1">Toiletries, meds, chargers, one change of clothes. Don’t make movers dig for it later.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <hr class="my-8 border-slate-200"/>
+
+          <h2 id="donts" class="text-2xl md:text-3xl font-bold ink">The Don’ts (Requests Clients Must Avoid)</h2>
+
+          <!-- Don'ts grid -->
+          <div class="mt-5 grid md:grid-cols-2 gap-4">
+            <div class="p-4 rounded-xl border border-rose-200 bg-rose-50/40">
+              <div class="flex items-start gap-3">
+                <span class="xmark"><i class="fa-solid fa-xmark text-rose-600 text-xs"></i></span>
+                <div>
+                  <p class="font-semibold">Don’t Ask for Plumbing, Gas, or Electrical Work</p>
+                  <p class="text-slate-700 text-sm mt-1">Fridge lines, washers, gas dryers, chandeliers = licensed trades only.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="p-4 rounded-xl border border-rose-200 bg-rose-50/40">
+              <div class="flex items-start gap-3">
+                <span class="xmark"><i class="fa-solid fa-xmark text-rose-600 text-xs"></i></span>
+                <div>
+                  <p class="font-semibold">Don’t Expect Movers to Move Prohibited Items</p>
+                  <p class="text-slate-700 text-sm mt-1">Propane, firearms, paint/chemicals, perishable food, live plants, pets.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="p-4 rounded-xl border border-rose-200 bg-rose-50/40">
+              <div class="flex items-start gap-3">
+                <span class="xmark"><i class="fa-solid fa-xmark text-rose-600 text-xs"></i></span>
+                <div>
+                  <p class="font-semibold">Don’t Micromanage Every Step</p>
+                  <p class="text-slate-700 text-sm mt-1">Movers have a system. Hovering slows them and increases risk.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="p-4 rounded-xl border border-rose-200 bg-rose-50/40">
+              <div class="flex items-start gap-3">
+                <span class="xmark"><i class="fa-solid fa-xmark text-rose-600 text-xs"></i></span>
+                <div>
+                  <p class="font-semibold">Don’t Assume Specialty Furniture Will Be Reassembled</p>
+                  <p class="text-slate-700 text-sm mt-1">Pianos, Murphy beds, built-ins may need specialists or extra notice.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="p-4 rounded-xl border border-rose-200 bg-rose-50/40">
+              <div class="flex items-start gap-3">
+                <span class="xmark"><i class="fa-solid fa-xmark text-rose-600 text-xs"></i></span>
+                <div>
+                  <p class="font-semibold">Don’t Leave Electronics Unverified</p>
+                  <p class="text-slate-700 text-sm mt-1">Test TVs/consoles <em>before</em> move day. Avoid unresolvable disputes.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="p-4 rounded-xl border border-rose-200 bg-rose-50/40">
+              <div class="flex items-start gap-3">
+                <span class="xmark"><i class="fa-solid fa-xmark text-rose-600 text-xs"></i></span>
+                <div>
+                  <p class="font-semibold">Don’t Pack Restricted Valuables in Movers’ Care</p>
+                  <p class="text-slate-700 text-sm mt-1">Cash, fine jewelry, collectibles, sensitive documents stay with client.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="p-4 rounded-xl border border-rose-200 bg-rose-50/40">
+              <div class="flex items-start gap-3">
+                <span class="xmark"><i class="fa-solid fa-xmark text-rose-600 text-xs"></i></span>
+                <div>
+                  <p class="font-semibold">Don’t Forget Special Needs Communication</p>
+                  <p class="text-slate-700 text-sm mt-1">Oversized items (safes, pool tables, aquariums) need advance notice.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="p-4 rounded-xl border border-rose-200 bg-rose-50/40 md:col-span-2">
+              <div class="flex items-start gap-3">
+                <span class="xmark"><i class="fa-solid fa-xmark text-rose-600 text-xs"></i></span>
+                <div>
+                  <p class="font-semibold">Don’t Rely on Movers for Storage Unless Prearranged</p>
+                  <p class="text-slate-700 text-sm mt-1">Not all movers provide storage. Confirm in advance if you’ll need it.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <hr class="my-8 border-slate-200"/>
+
+          <h2 id="script" class="text-2xl md:text-3xl font-bold ink">Realtor’s Quick Script for Clients</h2>
+          <div class="mt-4 p-5 rounded-xl bg-slate-50 border border-slate-200">
+            <p class="text-slate-800">
+              “Movers move furniture and boxes. Anything involving <strong>water, gas, or electricity</strong> requires a licensed pro.
+              For valuables, carry them yourself. And let’s confirm insurance before moving day so you’re covered.”
+            </p>
+          </div>
+
+          <div class="mt-6 p-5 rounded-xl bg-emerald-50 border border-emerald-200">
+            <p class="text-slate-800"><strong>Key Takeaway:</strong> The Do’s protect clients from damage and disputes. The Don’ts protect them from liability and expensive mistakes. Deliver this guide upfront to reduce stress and strengthen trust.</p>
+          </div>
+        </div>
+
+        <!-- CTA row -->
+        <div class="mt-8 flex flex-wrap gap-3">
+          <a href="{% if next_topic %}{% url 'lesson_detail' next_topic.slug %}{% else %}{% url 'lesson6' %}{% endif %}"
+             class="px-5 py-3 rounded-xl bg-emerald-600 text-white font-semibold hover:opacity-90">
+            Next Lesson
+          </a>
+          <a href="#" class="px-5 py-3 rounded-xl border border-slate-300 font-semibold hover:bg-slate-50">
+            Download Do’s & Don’ts (PDF)
+          </a>
+        </div>
+      </div>
+
+      <!-- Prev/Next -->
+      <div class="mt-6 flex items-center justify-between text-sm text-slate-600">
+        {% if prev_topic %}
+          <a href="{% url 'lesson_detail' prev_topic.slug %}" class="hover:text-slate-900"><i class="fa-solid fa-arrow-left-long mr-2"></i> {{ prev_topic.title }}</a>
+        {% else %}
+          <a href="{% url 'lesson6' %}" class="hover:text-slate-900"><i class="fa-solid fa-arrow-left-long mr-2"></i> Back to Overview</a>
+        {% endif %}
+        {% if next_topic %}
+          <a href="{% url 'lesson_detail' next_topic.slug %}" class="hover:text-slate-900">{{ next_topic.title }} <i class="fa-solid fa-arrow-right-long ml-2"></i></a>
+        {% endif %}
+      </div>
+    </article>
+
+    <!-- Sidebar -->
+    <aside class="lg:col-span-4 lg:sticky lg:top-20 h-max">
+      <!-- TOC -->
+      <div class="card rounded-2xl p-5 mb-5">
+        <div class="flex items-center justify-between mb-3">
+          <h4 class="font-semibold">On this page</h4>
+          <span class="text-xs text-slate-500">Lesson 7</span>
+        </div>
+        <nav id="toc" class="space-y-2 text-sm"></nav>
+      </div>
+
+      <!-- All topics -->
+      <div class="card rounded-2xl p-5">
+        <h4 class="font-semibold mb-3">All topics</h4>
+        <ul class="space-y-1 text-sm">
+          {% for t in all_topics %}
+          <li>
+            <a href="{% url 'lesson_detail' t.slug %}"
+               class="block px-3 py-2 rounded-lg border border-transparent hover:border-slate-200 hover:bg-slate-50 {% if t.slug == slug %}bg-slate-100 border-slate-200{% endif %}">
+              {{ forloop.counter }}. {{ t.title }}
+            </a>
+          </li>
+          {% endfor %}
+        </ul>
+        <a href="{% url 'lesson6' %}" class="mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-slate-200 hover:bg-slate-50 text-sm">
+          <i class="fa-solid fa-list"></i> Back to Overview
+        </a>
+      </div>
+    </aside>
+  </main>
+
+  <footer class="py-10 border-t">
+    <div class="max-w-6xl mx-auto px-6 text-xs text-slate-500">
+      © <span id="year"></span> Esposito Courses • Lesson 7
+    </div>
+  </footer>
+
+  <script>
+    // year + progress
+    document.getElementById('year').textContent = new Date().getFullYear();
+    const pb = document.getElementById('progressBar');
+    window.addEventListener('scroll', () => {
+      const h = document.documentElement;
+      const scrolled = (h.scrollTop) / (h.scrollHeight - h.clientHeight);
+      pb.style.width = (scrolled * 100) + '%';
+    });
+
+    // Build TOC from h2/h3
+    const content = document.querySelector('article');
+    const toc = document.getElementById('toc');
+    const heads = content.querySelectorAll('h2, h3');
+    const ul = document.createElement('ul'); ul.className = "space-y-1";
+    heads.forEach(h => {
+      if(!h.id){ h.id = h.textContent.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,''); }
+      const li = document.createElement('li');
+      li.innerHTML = `<a href="#${h.id}" class="block px-3 py-2 rounded-lg border border-transparent hover:border-slate-200 hover:bg-slate-50">${h.textContent}</a>`;
+      ul.appendChild(li);
+    });
+    toc.appendChild(ul);
+  </script>
+</body>
+</html>
