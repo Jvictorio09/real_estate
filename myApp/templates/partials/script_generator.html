@@ -1,0 +1,278 @@
+{# templates/partials/script_generator.html #}
+{% load static %}
+
+<script>
+  window.ScriptGen = Object.assign({
+    webhook: "https://katalyst-crm.fly.dev/webhook/48ac789d-7bda-43bc-8352-102b1aae076b ",
+    source:  "script_generator",
+  }, window.ScriptGen || {});
+</script>
+
+<!-- Script Generator — Luxe Shelf Drawer (LEFT) -->
+<div id="sg-root" class="fixed inset-0 z-[60] pointer-events-none">
+  <div id="sg-scrim" class="fixed inset-0 opacity-0 pointer-events-none transition-opacity duration-300"></div>
+
+  <!-- Handle pinned to viewport -->
+  <button id="sg-handle"
+    class="fixed left-0 top-1/2 -translate-y-1/2 h-36 w-12 rounded-r-2xl
+           bg-[var(--ink,#0b1027)] text-white shadow-[0_10px_30px_rgba(15,23,42,.18)]
+           ring-1 ring-black/10 flex flex-col items-center justify-center gap-2
+           pointer-events-auto select-none"
+    aria-controls="sg-panel" aria-expanded="false">
+    <i class="fa-solid fa-scroll text-sm opacity-80"></i>
+    <span id="sg-label" class="text-[10px] tracking-[.2em] [writing-mode:vertical-rl]">SCRIPT</span>
+  </button>
+
+  <!-- Drawer -->
+  <div id="sg-wrap" class="fixed left-0 top-1/2 -translate-y-1/2 pointer-events-none">
+    <div id="sg-panel"
+         class="relative w-[420px] max-w-[92vw] pointer-events-auto
+                bg-white/85 rounded-2xl border border-slate-200 overflow-hidden
+                will-change-transform shadow-[0_12px_36px_rgba(2,6,23,.10)]
+                [transform:translate3d(-420px,0,0)]">
+      <!-- Header -->
+      <div class="px-5 py-4 flex items-center justify-between border-b border-slate-200 bg-white/80">
+        <div class="flex items-center gap-3">
+          <span class="inline-flex h-8 w-8 items-center justify-center rounded-xl bg-[var(--brand,#18AFAB)] text-white">
+            <i class="fa-solid fa-microphone"></i>
+          </span>
+          <div>
+            <h3 class="font-semibold">Script Generator</h3>
+            <p class="text-xs text-slate-500">Fast intros, hooks</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-2">
+          <button id="sg-clear" class="text-xs px-2.5 py-1.5 rounded-lg border hover:bg-slate-50">Clear</button>
+          <button id="sg-close" class="h-9 w-9 rounded-full border border-slate-200 hover:bg-slate-50" aria-label="Close">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Body -->
+      <div id="sg-body" class="p-5 space-y-4 [transform:translate3d(-8px,0,0)] will-change-transform">
+        <div class="grid grid-cols-2 gap-3">
+          <label class="text-sm">
+            <span class="block text-xs text-slate-500 mb-1">Audience</span>
+            <input id="sg-audience" class="w-full rounded-lg border px-3 py-2 focus-visible:ring-2 focus-visible:ring-emerald-300" placeholder="First-time home buyers"/>
+          </label>
+          <label class="text-sm">
+            <span class="block text-xs text-slate-500 mb-1">Goal</span>
+            <input id="sg-goal" class="w-full rounded-lg border px-3 py-2 focus-visible:ring-2 focus-visible:ring-emerald-300" placeholder="Book a discovery call"/>
+          </label>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <label class="text-sm">
+            <span class="block text-xs text-slate-500 mb-1">Tone</span>
+            <select id="sg-tone" class="w-full rounded-lg border px-3 py-2 focus-visible:ring-2 focus-visible:ring-emerald-300">
+              <option value="confident, friendly">Confident, friendly</option>
+              <option value="warm, compassionate">Warm, compassionate</option>
+              <option value="energetic, punchy">Energetic, punchy</option>
+              <option value="calm, expert">Calm, expert</option>
+              <option value="witty, playful">Witty, playful</option>
+            </select>
+          </label>
+          <label class="text-sm">
+            <span class="block text-xs text-slate-500 mb-1">Length</span>
+            <select id="sg-length" class="w-full rounded-lg border px-3 py-2 focus-visible:ring-2 focus-visible:ring-emerald-300">
+              <option value="short">Short (15–25s)</option>
+              <option value="medium">Medium (30–45s)</option>
+              <option value="long">Long (60–90s)</option>
+            </select>
+          </label>
+        </div>
+
+        <label class="text-sm block">
+          <span class="block text-xs text-slate-500 mb-1">Situation prompt</span>
+          <textarea id="sg-situation" class="w-full rounded-lg border px-3 py-2 min-h-[120px] focus-visible:ring-2 focus-visible:ring-emerald-300" placeholder="Describe the situation or context in detail…"></textarea>
+        </label>
+
+        <div class="flex items-center gap-3">
+          <button id="sg-generate" class="px-4 py-2 rounded-xl bg-[var(--brand,#18AFAB)] text-white hover:opacity-90">
+            <i class="fa-solid fa-wand-magic-sparkles mr-2"></i>Generate
+          </button>
+          <button id="sg-copy" class="px-3 py-2 rounded-xl border hover:bg-slate-50">
+            <i class="fa-regular fa-copy mr-2"></i>Copy
+          </button>
+        </div>
+
+        <div class="mt-2">
+          <label class="text-xs text-slate-500 mb-1 block">Result</label>
+          <textarea id="sg-output" class="w-full rounded-xl border px-3 py-3 min-h-[180px] font-mono text-sm focus-visible:ring-2 focus-visible:ring-emerald-300" placeholder="Your script will appear here…"></textarea>
+        </div>
+      </div>
+
+      <div class="px-5 py-3 border-t border-slate-200 text-[11px] text-slate-500 flex items-center justify-between">
+        <span>Tip: <kbd class="px-1 border rounded">⌘</kbd>/<kbd class="px-1 border rounded">Ctrl</kbd> + <kbd class="px-1 border rounded">Enter</kbd></span>
+        <a class="underline decoration-dotted" href="#" tabindex="-1">Script presets</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .sg-blur { backdrop-filter: blur(8px); background: rgba(255,255,255,.7); }
+  @media (prefers-reduced-motion: reduce){ * { scroll-behavior: auto !important } }
+</style>
+
+<script>
+(() => {
+  const handle = document.getElementById('sg-handle');
+  const label  = document.getElementById('sg-label');
+  const wrap   = document.getElementById('sg-wrap');
+  const panel  = document.getElementById('sg-panel');
+  const body   = document.getElementById('sg-body');
+  const scrim  = document.getElementById('sg-scrim');
+  const closeB = document.getElementById('sg-close');
+  const genBtn = document.getElementById('sg-generate');
+  const copyBtn= document.getElementById('sg-copy');
+  const clrBtn = document.getElementById('sg-clear');
+  const out    = document.getElementById('sg-output');
+
+  let open = false;
+  const WIDTH = Math.min(420, Math.floor(window.innerWidth*0.92));
+
+  function layout(){
+    const y = Math.round(window.innerHeight/2);
+    wrap.style.top = y + 'px';
+    wrap.style.transform = 'translateY(-50%)';
+    if (!open) panel.style.transform = `translate3d(-${WIDTH}px,0,0)`;
+  }
+  layout(); window.addEventListener('resize', layout);
+
+  function springX(el, fromX, toX, opts={}){
+    const dur = opts.duration ?? 520;
+    const easing = opts.easing ?? 'cubic-bezier(.18,.9,.16,1)';
+    return el.animate(
+      [{ transform:`translate3d(${fromX}px,0,0)` }, { transform:`translate3d(${toX}px,0,0)` }],
+      { duration: dur, easing, fill:'forwards' }
+    );
+  }
+  function parallaxX(el, fromX, toX, dur=520){
+    return el.animate(
+      [{ transform:`translate3d(${fromX}px,0,0)` }, { transform:`translate3d(${toX}px,0,0)` }],
+      { duration: dur, easing:'cubic-bezier(.2,.8,.2,1)', fill:'forwards' }
+    );
+  }
+
+  function openDrawer(){
+    if (open) return; open = true; handle.setAttribute('aria-expanded','true');
+    label.style.opacity = '0';
+    panel.classList.remove('sg-blur');
+
+    const a1 = springX(panel, -WIDTH, 0, { duration: 520 });
+    parallaxX(body, -8, 0, 520);
+    scrim.style.background = 'radial-gradient(900px 520px at 0% 50%, rgba(24,175,171,.10), transparent 70%)';
+    scrim.style.opacity = '1';
+
+    a1.addEventListener('finish', () => {
+      panel.animate(
+        [{ transform:'translate3d(0,0,0)' }, { transform:'translate3d(10px,0,0)' }, { transform:'translate3d(0,0,0)' }],
+        { duration: 260, easing: 'cubic-bezier(.22,.9,.26,1)', fill: 'forwards' }
+      );
+      panel.classList.add('sg-blur');
+      panel.style.boxShadow = '0 18px 54px rgba(2,6,23,.16)';
+    }, { once:true });
+  }
+
+  function closeDrawer(){
+    if (!open) return; open = false; handle.setAttribute('aria-expanded','false');
+    label.style.opacity = '1';
+    panel.classList.remove('sg-blur');
+    panel.style.boxShadow = '0 12px 36px rgba(2,6,23,.10)';
+    springX(panel, 0, -WIDTH, { duration: 420, easing:'cubic-bezier(.2,.8,.2,1)' });
+    parallaxX(body, 0, -8, 420);
+    scrim.style.opacity = '0';
+  }
+
+  handle.addEventListener('click', () => {
+    handle.animate(
+      [{ transform:'translate(0,-50%)' }, { transform:'translate(12px,-50%)' }, { transform:'translate(0,-50%)' }],
+      { duration: 260, easing: 'cubic-bezier(.25,.9,.2,1)' }
+    );
+    openDrawer();
+  });
+  closeB?.addEventListener('click', closeDrawer);
+  document.addEventListener('click', (e)=>{
+    const root = document.getElementById('sg-root');
+    if (!root.contains(e.target) && open) closeDrawer();
+  });
+  document.addEventListener('keydown', (e)=>{
+    if (e.key === 'Escape' && open) closeDrawer();
+    if ((e.metaKey||e.ctrlKey) && e.key === 'Enter') generate();
+  });
+
+  // Clear / Copy
+  clrBtn?.addEventListener('click', ()=>{
+    ['sg-audience','sg-goal','sg-situation'].forEach(id=>{
+      const el=document.getElementById(id); if(el) el.value='';
+    });
+    out.value='';
+    const t=document.getElementById('sg-tone'); const l=document.getElementById('sg-length');
+    if (t) t.selectedIndex=0; if (l) l.selectedIndex=0;
+  });
+  copyBtn?.addEventListener('click', async ()=>{
+    if(!out.value) return; await navigator.clipboard.writeText(out.value);
+    copyBtn.innerHTML = '<i class="fa-solid fa-check mr-2"></i>Copied';
+    setTimeout(()=> copyBtn.innerHTML = '<i class="fa-regular fa-copy mr-2"></i>Copy', 1200);
+  });
+
+  genBtn?.addEventListener('click', generate);
+
+  function val(id){ const el=document.getElementById(id); return (el && el.value.trim()) || ""; }
+
+  async function generate(){
+    const payload = {
+      type:    "script_generator_v1",
+      audience: val('sg-audience') || 'first-time home buyers',
+      goal:     val('sg-goal')     || 'book a discovery call',
+      tone:     (document.getElementById('sg-tone')||{}).value || 'confident, friendly',
+      length:   (document.getElementById('sg-length')||{}).value || 'short',
+      situation: val('sg-situation') || '',
+      context:  { path: location.pathname, title: document.title },
+      source:   (window.ScriptGen && window.ScriptGen.source) || 'script_generator'
+    };
+
+    const original = genBtn.innerHTML;
+    genBtn.disabled = true; genBtn.classList.add('opacity-60','cursor-not-allowed');
+    genBtn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin mr-2"></i>Generating…';
+
+    try{
+      const url = (window.ScriptGen && window.ScriptGen.webhook) || '/api/scriptgen';
+      const res = await fetch(url, {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify(payload)
+      });
+      const ct  = res.headers.get('content-type') || '';
+      let text  = '';
+
+      if (!res.ok) {
+        text = `Server ${res.status} — using local draft.\n\n` + fallback(payload);
+      } else if (ct.includes('application/json')){
+        const data = await res.json();
+        text = pickReply(data) || fallback(payload);
+      } else {
+        text = (await res.text()).trim() || fallback(payload);
+      }
+      out.value = text;
+    } catch(e){
+      out.value = fallback(payload);
+    } finally{
+      genBtn.disabled = false; genBtn.classList.remove('opacity-60','cursor-not-allowed');
+      genBtn.innerHTML = original;
+    }
+  }
+
+  function pickReply(obj){
+    return obj.reply || obj.text || obj.message || obj.content ||
+           (obj.choices && obj.choices[0]?.message?.content) || '';
+  }
+
+  // Local fallback (role-style script)
+  function fallback(p){
+    return `Here’s a quick script for ${p.audience} to ${p.goal}:\n\n👩 Student: Hi, I’m interested in ${p.situation||'learning more'}.\n👨 Coach: Great to meet you! Let’s talk about how you can ${p.goal}.\n\nTone: ${p.tone}, Length: ${p.length}`;
+  }
+})();
+</script>

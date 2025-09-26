@@ -109,7 +109,7 @@ import json, requests
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 
-WEBHOOK_URL = "https://katalyst-crm.fly.dev/webhook/1390f5ad-851a-4b6f-ba50-2f084cfc436d"
+WEBHOOK_URL = "https://katalyst-crm.fly.dev/webhook/3f1202ed-a514-4c18-8b1b-4bd2fbd0bf85"
 
 @csrf_exempt
 def chat_proxy(request):
