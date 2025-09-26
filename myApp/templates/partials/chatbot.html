@@ -102,17 +102,19 @@
     </div>
   </div>
 </div>
-
 <script>
 /* ---------- Configuration ---------- */
 window.EspositoChat = {
   webhook: "https://katalyst-crm.fly.dev/webhook/3f1202ed-a514-4c18-8b1b-4bd2fbd0bf85",
-  // If you use your Django proxy, switch to: webhook: "/api/chat",
   storageKey: "esposito_chat_v2",
   brand: { primary: "#18AFAB" },
-  // optional page context to help the bot (you can overwrite per-page)
-  context: { path: window.location.pathname, title: document.title }
+  context: { path: window.location.pathname, title: document.title },
+
+  // NEW — pick one:
+  autoClearAlways: true,   // clears on every page load (any navigation)
+  autoClearOnReload: true   // clears only when the user hits refresh/reload
 };
+
 
 /* ---------- Chat Implementation (vanilla JS) ---------- */
 (function () {
@@ -123,6 +125,24 @@ window.EspositoChat = {
         minBtn=$("#espoMin"), scroll=$("#espoScroll"), form=$("#espoForm"), input=$("#espoInput"),
         badge=$("#espoBadge"), clearBtn=$("#espoClear"), dlBtn=$("#espoDownload"),micBtn=$("#espoMic");
 
+  // --- Auto-clear logic ---
+  function clearStorage() {
+    try {
+      localStorage.removeItem(KEY);
+      // optional: also clear any future session-based keying if you add it
+      // sessionStorage.removeItem(KEY);
+    } catch(_) {}
+  }
+
+  // Decide if this navigation is a "reload"
+  const navEntry = performance.getEntriesByType?.("navigation")?.[0];
+  const isReload = navEntry ? navEntry.type === "reload"
+                : (performance.navigation && performance.navigation.type === 1); // legacy
+
+  if (cfg.autoClearAlways || (cfg.autoClearOnReload && isReload)) {
+    clearStorage();
+  }
+
   let history = load();
   if (history.length) { history.forEach(m => append(m.role, m.text, false, m.ts)); setTimeout(scrollBottom, 15); }
 
@@ -132,24 +152,23 @@ window.EspositoChat = {
   }));
 
   launcher.addEventListener("click", () => {
-  panel.classList.toggle("hidden");
-  if (!panel.classList.contains("hidden")) {
-    launcher.classList.add("hidden");     // hide the head
-    badge.classList.add("hidden");
-    input.focus();
-  } else {
-    launcher.classList.remove("hidden");  // show again
-  }
-});
-closeBtn.addEventListener("click", () => {
-  panel.classList.add("hidden");
-  launcher.classList.remove("hidden");
-});
-minBtn.addEventListener("click", () => {
-  panel.classList.add("hidden");
-  launcher.classList.remove("hidden");
-});
-
+    panel.classList.toggle("hidden");
+    if (!panel.classList.contains("hidden")) {
+      launcher.classList.add("hidden");     // hide the head
+      badge.classList.add("hidden");
+      input.focus();
+    } else {
+      launcher.classList.remove("hidden");  // show again
+    }
+  });
+  closeBtn.addEventListener("click", () => {
+    panel.classList.add("hidden");
+    launcher.classList.remove("hidden");
+  });
+  minBtn.addEventListener("click", () => {
+    panel.classList.add("hidden");
+    launcher.classList.remove("hidden");
+  });
 
   input.addEventListener("keydown", (e)=>{
     if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); $("#espoSend").click(); }
@@ -213,11 +232,14 @@ minBtn.addEventListener("click", () => {
       }
 
       removeTyping(typingId);
-      append("assistant", sanitize(cleanJSONish(reply))); persist();
+      const cleaned = tidyText(cleanJSONish(reply));
+      append("assistant", cleaned);
+      persist();
       if (panel.classList.contains("hidden")) badge.classList.remove("hidden");
     } catch (e) {
       removeTyping(typingId);
-      append("assistant", "Network hiccup. Please try again."); persist();
+      append("assistant", "Network hiccup. Please try again.");
+      persist();
     }
   }
 
@@ -294,7 +316,7 @@ minBtn.addEventListener("click", () => {
   function persist(){ try { localStorage.setItem(KEY, JSON.stringify(history.slice(-200))); } catch(e){} }
   function load(){ try { return JSON.parse(localStorage.getItem(KEY) || "[]"); } catch(e){ return []; } }
 
-  // Minimal Markdown → HTML (bold, italic, links, line breaks)
+  // Minimal Markdown → HTML (bold, italic, code, links, line breaks)
   function renderMarkdown(s){
     const esc = sanitize(s);
     return esc
@@ -307,29 +329,78 @@ minBtn.addEventListener("click", () => {
   // Keep things safe
   function sanitize(s){ const d=document.createElement('div'); d.textContent=String(s||""); return d.textContent; }
 
-  // If the webhook returns JSON or JSON-ish text, pull the main field
+  // Tidy whitespace/newlines
+  function tidyText(s){
+    const t = String(s ?? "");
+    return t.replace(/\r\n/g, "\n").replace(/\n{3,}/g, "\n\n").trim();
+  }
+
+  // If the webhook returns JSON or JSON-ish text, normalize it to a string reply
   function cleanJSONish(txt){
     try {
       const t = typeof txt === "string" ? txt.trim() : txt;
-      if (typeof t !== "string") return txt;
-      // detect JSON object in string
-      if (t.startsWith("{") && t.endsWith("}")) {
-        const obj = JSON.parse(t);
-        return pickReply(obj);
+
+      // Already a non-string? Hand it to pickReply directly
+      if (typeof t !== "string") return pickReply(t);
+
+      // Try to parse object/array JSON
+      if ((t.startsWith("{") && t.endsWith("}")) || (t.startsWith("[") && t.endsWith("]"))) {
+        const parsed = JSON.parse(t);
+        return pickReply(parsed);
       }
-      return txt;
-    } catch(e){ return txt; }
+
+      // Not JSON-looking; return as-is
+      return t;
+    } catch {
+      // Parsing failed; just return readable text
+      return typeof txt === "string" ? txt : String(txt ?? "");
+    }
   }
-  function pickReply(obj){
-    return obj.reply || obj.text || obj.message || obj.Response || obj.content ||
-           (obj.choices && obj.choices[0]?.message?.content) ||
-           (typeof obj === "string" ? obj : JSON.stringify(obj, null, 2));
+
+  // Normalize many possible API shapes to a plain string message
+  function pickReply(payload){
+    // Arrays: take the first useful element
+    if (Array.isArray(payload)) {
+      if (payload.length === 0) return "";
+      return pickReply(payload[0]);
+    }
+
+    // Strings: done
+    if (typeof payload === "string") return payload;
+
+    // Objects: try common fields in order
+    if (payload && typeof payload === "object") {
+      const candidates = [
+        "reply","text","message","content","Response","result","output","answer",
+        // OpenAI-like shapes (allow nested)
+        payload.choices?.[0]?.message?.content,
+        payload.data?.reply,
+        payload.data?.message,
+      ];
+
+      for (const key of candidates) {
+        if (!key) continue;
+        if (typeof key === "string") {
+          if (key in payload && payload[key]) return String(payload[key]);
+        } else if (typeof key === "object") {
+          // already a nested extracted value
+          return pickReply(key);
+        }
+      }
+
+      // Last resort: pretty-print the object
+      try { return JSON.stringify(payload, null, 2); } catch { /* noop */ }
+    }
+
+    // Fallback—coerce to string
+    return String(payload ?? "");
   }
 })();
 
+/* ---------- Voice Dictation (Web Speech API) ---------- */
 (function initDictation(){
-  const micBtn = document.getElementById("espoMic");           // ensure we can access it here
-  const input  = document.getElementById("espoInput");         // local refs (no scope issues)
+  const micBtn = document.getElementById("espoMic");
+  const input  = document.getElementById("espoInput");
   if (!micBtn || !input) return;
 
   const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -389,9 +460,8 @@ minBtn.addEventListener("click", () => {
 
   micBtn.addEventListener("click", () => {
     if (!listening) {
-      // show immediate “starting” feedback before onstart fires
       setMic("starting");
-      try { rec.start(); } catch(_) {} // safe-start
+      try { rec.start(); } catch(_) {}
     } else {
       rec.stop();
     }

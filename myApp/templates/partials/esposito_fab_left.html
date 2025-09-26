@@ -1,0 +1,208 @@
+{% load static %}
+
+<!-- Esposito AI — Voice-first Left FAB (masculine vibe) -->
+<style>
+  .espo-glow { box-shadow: 0 10px 30px rgba(59,130,246,.28), 0 2px 8px rgba(37,99,235,.2); }
+
+  /* Voice equalizer bars */
+  @keyframes espo-bar {
+    0%, 100% { transform: scaleY(0.5) }
+    50%      { transform: scaleY(1.1) }
+  }
+  .espo-bar { transform-origin: center bottom; animation: espo-bar 900ms ease-in-out infinite; }
+  .espo-bar:nth-child(2) { animation-delay: .12s }
+  .espo-bar:nth-child(3) { animation-delay: .24s }
+
+  @media (prefers-reduced-motion: reduce) {
+    .espo-reduce-motion * { animation: none !important; transition: none !important; }
+  }
+</style>
+
+<div id="espo-left-fab" class="fixed z-[9999] espo-reduce-motion"
+     style="inset-inline-start: max(1rem, env(safe-area-inset-left)); inset-block-end: max(1rem, env(safe-area-inset-bottom));">
+
+  <button id="espoLeftLauncher" type="button"
+    class="group relative flex items-center gap-2 rounded-full espo-glow ring-1 ring-slate-200
+           bg-gradient-to-br from-indigo-700 to-blue-500 text-white transition will-change-transform
+           hover:scale-[1.05] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-blue-300
+           ps-2 pe-3 h-12"
+    aria-haspopup="dialog" aria-controls="espoLeftModal" aria-label="Talk to Esposito AI (voice)">
+
+    <!-- Mic badge -->
+    <span class="relative inline-flex items-center justify-center w-10 h-10 rounded-full bg-white/15">
+      <i class="fa-solid fa-microphone-lines text-base"></i>
+      <!-- Status dot -->
+      <span class="absolute -top-0.5 -end-0.5 inline-flex">
+        <span class="w-2.5 h-2.5 inline-flex rounded-full bg-blue-300/80 animate-ping [animation-duration:1.8s]"></span>
+        <span class="w-2.5 h-2.5 inline-flex rounded-full bg-blue-400 absolute"></span>
+      </span>
+    </span>
+
+    <!-- Voice wave -->
+    <span aria-hidden="true" class="hidden sm:flex items-end gap-[3px] h-4">
+      <span class="espo-bar w-[3px] h-3 rounded-sm bg-white/70"></span>
+      <span class="espo-bar w-[3px] h-4 rounded-sm bg-white/90"></span>
+      <span class="espo-bar w-[3px] h-3 rounded-sm bg-white/70"></span>
+    </span>
+
+    <!-- Friendly label -->
+    <span class="hidden sm:inline-flex overflow-hidden whitespace-nowrap text-[12px] md:text-[13px] font-medium tracking-wide
+                 rounded-full bg-white/20 border border-white/20 px-0 opacity-0
+                 transition-all duration-200 group-hover:px-2 group-hover:opacity-100 group-focus-visible:px-2 group-focus-visible:opacity-100">
+      Hi! Talk to Esposito AI here
+    </span>
+  </button>
+</div>
+
+
+
+<!-- Modal -->
+<div id="espoLeftModal"
+     class="fixed inset-0 z-[10000] hidden espo-reduce-motion"
+     aria-hidden="true">
+  <!-- Backdrop -->
+  <div id="espoLeftBackdrop"
+       class="absolute inset-0 bg-black/50 backdrop-blur-sm opacity-0 transition-opacity"></div>
+
+  <!-- Dialog panel -->
+  <div id="espoLeftDialog" role="dialog" aria-modal="true" aria-labelledby="espoLeftTitle"
+       class="absolute inset-0 flex items-center justify-center opacity-0 translate-y-2 transition
+              p-[max(12px,env(safe-area-inset-bottom))]">
+    <div class="relative w-full h-full sm:h-[92vh] sm:w-[96vw] md:max-w-5xl sm:rounded-2xl overflow-hidden
+                bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 shadow-2xl">
+
+      <!-- Header -->
+      <div class="h-12 px-3 sm:px-4 flex items-center justify-between
+                  bg-gradient-to-r from-emerald-600 to-teal-600 text-white">
+        <div class="flex items-center gap-2 min-w-0">
+          <span class="inline-flex w-7 h-7 items-center justify-center rounded-full bg-white/20 shrink-0">
+            <i class="fa-solid fa-robot text-sm"></i>
+          </span>
+          <h3 id="espoLeftTitle" class="font-semibold truncate">Esposito AI</h3>
+          <span class="hidden sm:inline text-white/80 text-xs">embedded</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <a id="espoLeftOpenNew" href="https://speak-echo-reply.lovable.app/" target="_blank" rel="noopener"
+             class="hidden sm:inline text-white/90 hover:text-white underline decoration-dotted text-xs">
+            Open in new tab
+          </a>
+          <button id="espoLeftClose" class="w-9 h-9 rounded-full hover:bg-white/10 focus-visible:outline-none
+                                           focus-visible:ring-4 focus-visible:ring-white/40" aria-label="Close">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Body (iframe container) -->
+      <div class="w-full h-[calc(100%-3rem)] sm:h-[calc(92vh-3rem)] bg-slate-50 dark:bg-slate-900 relative">
+        <iframe id="espoLeftFrame"
+                title="Esposito AI"
+                class="w-full h-full"
+                loading="lazy"
+                referrerpolicy="no-referrer"
+                sandbox="allow-scripts allow-forms allow-same-origin allow-popups allow-downloads"
+                allow="clipboard-read; clipboard-write; microphone; camera"
+                src=""></iframe>
+
+        <!-- Fallback notice -->
+        <div id="espoLeftFallback"
+             class="hidden absolute inset-6 sm:inset-12 flex items-center justify-center">
+          <div class="max-w-md text-center text-slate-700 dark:text-slate-200">
+            <p class="mb-3">We couldn’t embed the page (the site may block iframes).</p>
+            <a href="https://speak-echo-reply.lovable.app/" target="_blank" rel="noopener"
+               class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-600 text-white hover:opacity-90">
+              <i class="fa-solid fa-arrow-up-right-from-square"></i>
+              Open in new tab
+            </a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- Script -->
+<script>
+(function(){
+  const LAUNCHER  = document.getElementById("espoLeftLauncher");
+  const MODAL     = document.getElementById("espoLeftModal");
+  const DIALOG    = document.getElementById("espoLeftDialog");
+  const BACKDROP  = document.getElementById("espoLeftBackdrop");
+  const CLOSE     = document.getElementById("espoLeftClose");
+  const FRAME     = document.getElementById("espoLeftFrame");
+  const FALLBACK  = document.getElementById("espoLeftFallback");
+  const TARGET    = "https://speak-echo-reply.lovable.app/";
+  let fallbackTimer = null;
+
+  function lockScroll(lock){
+    document.documentElement.style.overflow = lock ? "hidden" : "";
+    document.body.style.overflow = lock ? "hidden" : "";
+    document.body.style.paddingRight = lock ? (window.innerWidth - document.documentElement.clientWidth) + "px" : "";
+  }
+
+  function openModal(){
+    // lazy src
+    if (!FRAME.getAttribute("src")) FRAME.setAttribute("src", TARGET);
+
+    // show
+    MODAL.classList.remove("hidden");
+    MODAL.setAttribute("aria-hidden","false");
+    lockScroll(true);
+
+    // animate in
+    requestAnimationFrame(()=>{
+      BACKDROP.style.opacity = "1";
+      DIALOG.style.opacity = "1";
+      DIALOG.style.transform = "translateY(0)";
+    });
+
+    // fallback timer for blocked iframes
+    fallbackTimer = setTimeout(()=> FALLBACK.classList.remove("hidden"), 2500);
+    FRAME.addEventListener("load", () => {
+      clearTimeout(fallbackTimer);
+      FALLBACK.classList.add("hidden");
+    }, { once:true });
+
+    // a11y
+    CLOSE.focus();
+    document.addEventListener("keydown", onKey);
+    DIALOG.addEventListener("click", onBackdropClick);
+  }
+
+  function closeModal(){
+    // animate out
+    BACKDROP.style.opacity = "0";
+    DIALOG.style.opacity = "0";
+    DIALOG.style.transform = "translateY(8px)";
+
+    // after transition
+    setTimeout(()=>{
+      MODAL.classList.add("hidden");
+      MODAL.setAttribute("aria-hidden","true");
+      lockScroll(false);
+      document.removeEventListener("keydown", onKey);
+      DIALOG.removeEventListener("click", onBackdropClick);
+      LAUNCHER.focus();
+    }, 160);
+
+    clearTimeout(fallbackTimer);
+  }
+
+  function onBackdropClick(e){
+    // close only if clicking outside the inner card
+    if (e.target === DIALOG) closeModal();
+  }
+
+  function onKey(e){
+    if (e.key === "Escape") closeModal();
+    // basic focus trap: keep tab inside header controls on small screens
+    if (e.key === "Tab" && !e.shiftKey && document.activeElement === CLOSE) {
+      e.preventDefault(); CLOSE.focus();
+    }
+  }
+
+  LAUNCHER.addEventListener("click", openModal);
+  CLOSE.addEventListener("click", closeModal);
+})();
+</script>

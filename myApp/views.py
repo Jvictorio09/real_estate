@@ -129,3 +129,38 @@ def chat_proxy(request):
         return JsonResponse(data, status=r.status_code)
     except requests.RequestException as e:
         return JsonResponse({"error": "Upstream error", "detail": str(e)}, status=502)
+
+
+
+import os, base64, uuid
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.conf import settings
+
+ELEVEN_API_KEY = os.getenv("ELEVEN_API_KEY")
+ELEVEN_VOICE   = os.getenv("ELEVEN_VOICE", "Rachel")
+
+@csrf_exempt
+def espo_webhook(request, token):
+    import json
+    data = json.loads(request.body.decode("utf-8"))
+
+    reply = f"I heard: {data.get('message') or 'voice message'}"
+
+    audio_url = None
+    if data.get("tts") and ELEVEN_API_KEY:
+        from pathlib import Path
+        import requests
+        outname = f"tts_{uuid.uuid4().hex}.mp3"
+        outpath = Path(settings.MEDIA_ROOT) / outname
+        headers = {"xi-api-key": ELEVEN_API_KEY}
+        res = requests.post(
+            f"https://api.elevenlabs.io/v1/text-to-speech/{ELEVEN_VOICE}",
+            headers={**headers,"Content-Type":"application/json"},
+            json={"text": reply, "voice_settings": {"stability":0.3,"similarity_boost":0.7}},
+        )
+        if res.ok:
+            outpath.write_bytes(res.content)
+            audio_url = settings.MEDIA_URL + outname
+
+    return JsonResponse({"reply": reply, "audio_url": audio_url})
