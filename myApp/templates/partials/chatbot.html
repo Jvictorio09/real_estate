@@ -4,13 +4,17 @@
 <!-- Floating AI Chat (Esposito) -->
 <div id="espo-chat" class="fixed z-50 bottom-5 right-5">
   <!-- Launcher -->
-  <button id="espoLauncher"
-    class="group w-14 h-14 rounded-full shadow-lg flex items-center justify-center ring-1 ring-slate-200
-           bg-gradient-to-br from-emerald-500 to-teal-600 text-white hover:scale-[1.03] transition
-           relative">
-    <i class="fa-solid fa-robot text-lg"></i>
-    <span id="espoBadge" class="absolute -top-1 -right-1 hidden w-4 h-4 rounded-full bg-rose-500 ring-2 ring-white"></span>
-  </button>
+<button id="espoLauncher"
+  class="group w-14 h-14 rounded-full shadow-lg flex items-center justify-center ring-1 ring-slate-200
+         bg-gradient-to-br from-emerald-500 to-teal-600 hover:scale-[1.03] transition
+         relative overflow-hidden">
+  <img src="https://res.cloudinary.com/djzks0atj/image/upload/v1758984056/Untitled_design_tzb5ld.png"
+       alt="Chatbot Avatar"
+       class="w-full h-full object-cover rounded-full">
+  <span id="espoBadge"
+        class="absolute -top-1 -right-1 hidden w-4 h-4 rounded-full bg-rose-500 ring-2 ring-white"></span>
+</button>
+
 
   <!-- Panel -->
   <div id="espoPanel"
@@ -20,9 +24,12 @@
     <!-- Header -->
     <div class="relative px-4 py-3 border-b bg-gradient-to-r from-emerald-600 to-teal-600 text-white">
       <div class="flex items-center gap-3">
-        <div class="w-9 h-9 rounded-full bg-white/20 flex items-center justify-center">
-          <i class="fa-solid fa-robot"></i>
-        </div>
+        <div class="w-9 h-9 rounded-full overflow-hidden bg-white/20">
+  <img src="https://res.cloudinary.com/djzks0atj/image/upload/v1758984056/Untitled_design_tzb5ld.png" 
+       alt="Chatbot Avatar" 
+       class="w-full h-full object-cover">
+</div>
+
         <div class="flex-1">
           <div class="font-semibold">Esposito AI</div>
           <div class="text-xs text-white/80">Ask about topics, scripts, do’s & don’ts</div>
@@ -37,9 +44,12 @@
     <div id="espoScroll" class="h-[calc(100%-146px)] p-4 space-y-3 overflow-y-auto bg-slate-50 dark:bg-slate-950/40">
       <!-- Seed -->
       <div class="flex items-start gap-3">
-        <div class="w-8 h-8 rounded-full bg-emerald-600 text-white flex items-center justify-center">
-          <i class="fa-solid fa-robot text-sm"></i>
-        </div>
+        <div class="w-8 h-8 rounded-full overflow-hidden bg-emerald-600">
+  <img src="https://res.cloudinary.com/djzks0atj/image/upload/v1758984056/Untitled_design_tzb5ld.png"
+       alt="Chatbot Avatar"
+       class="w-full h-full object-cover">
+</div>
+
         <div class="max-w-[80%] rounded-2xl px-3.5 py-2.5 bg-white border border-slate-200 text-slate-800
                     dark:bg-slate-900 dark:border-slate-700 dark:text-slate-100">
           <div class="text-sm">
@@ -249,7 +259,9 @@ window.EspositoChat = {
 
     const avatar = document.createElement("div");
     avatar.className = "w-8 h-8 rounded-full flex items-center justify-center " + (role === "user" ? "bg-slate-800 text-white" : "bg-emerald-600 text-white");
-    avatar.innerHTML = role === "user" ? '<i class="fa-solid fa-user text-sm"></i>' : '<i class="fa-solid fa-robot text-sm"></i>';
+    avatar.innerHTML = role === "user"
+  ? '<i class="fa-solid fa-user text-sm"></i>'
+  : '<img src="https://res.cloudinary.com/djzks0atj/image/upload/v1758984056/Untitled_design_tzb5ld.png" alt="Chatbot Avatar" class="w-5 h-5 rounded-full object-cover">';
 
     const bubble = document.createElement("div");
     bubble.className = "max-w-[80%] rounded-2xl px-3.5 py-2.5 " + (role === "user"
@@ -298,9 +310,12 @@ window.EspositoChat = {
     const wrap = document.createElement("div");
     wrap.id = id; wrap.className = "flex items-start gap-3";
     wrap.innerHTML = `
-      <div class="w-8 h-8 rounded-full bg-emerald-600 text-white flex items-center justify-center">
-        <i class="fa-solid fa-robot text-sm"></i>
-      </div>
+      <div class="w-8 h-8 rounded-full overflow-hidden bg-emerald-600">
+  <img src="https://res.cloudinary.com/djzks0atj/image/upload/v1758984056/Untitled_design_tzb5ld.png"
+       alt="Chatbot Avatar"
+       class="w-full h-full object-cover">
+</div>
+
       <div class="max-w-[80%] rounded-2xl px-3.5 py-2.5 bg-white border border-slate-200 dark:bg-slate-900 dark:border-slate-700">
         <div class="flex gap-1">
           <span class="w-2 h-2 rounded-full bg-slate-300 animate-bounce" style="animation-delay:0ms"></span>
